@@ -79,6 +79,8 @@ export default function AdminDashboardPage() {
   // Other entities
   const [product, setProduct] = useState<ProductConfig | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [editingMethod, setEditingMethod] = useState<PaymentMethod | null>(null);
+  const [methodSaving, setMethodSaving] = useState(false);
   const [customers, setCustomers] = useState<(UserProfile & { ordersCount: number; totalSpentEGP: number })[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
@@ -296,6 +298,45 @@ export default function AdminDashboardPage() {
       }
     } catch {
       setNotice({ type: 'error', message: 'Failed to update settings' });
+    }
+  };
+
+  // Save / Update Payment Method
+  const handleSavePaymentMethod = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingMethod) return;
+    setMethodSaving(true);
+    try {
+      const res = await fetch('/api/admin/payment-methods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingMethod),
+      });
+      if (res.ok) {
+        setNotice({ type: 'success', message: 'تم حفظ وتحديث بيانات وسيلة الدفع بنجاح!' });
+        setEditingMethod(null);
+        loadAllData();
+      } else {
+        throw new Error('Failed to save');
+      }
+    } catch {
+      setNotice({ type: 'error', message: 'تعذر حفظ بيانات وسيلة الدفع' });
+    } finally {
+      setMethodSaving(false);
+    }
+  };
+
+  // Delete Payment Method
+  const handleDeletePaymentMethod = async (id: string) => {
+    if (!confirm('هل أنت متأكد من حذف وسيلة الدفع هذه؟')) return;
+    try {
+      const res = await fetch(`/api/admin/payment-methods/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setNotice({ type: 'success', message: 'تم حذف وسيلة الدفع بنجاح' });
+        loadAllData();
+      }
+    } catch {
+      setNotice({ type: 'error', message: 'تعذر حذف وسيلة الدفع' });
     }
   };
 
@@ -896,46 +937,214 @@ export default function AdminDashboardPage() {
         {/* ================= TAB 3: PAYMENT METHODS ================= */}
         {activeTab === 'payments' && (
           <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-400" />
-                <span>طرق الدفع المصرية المعتمدة</span>
-              </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-indigo-400" />
+                  <span>طرق الدفع المصرية المعتمدة وتعديلها</span>
+                </h2>
+                <p className="text-xs text-slate-400">
+                  تعديل أرقام المحافظ، معرفات إنستاباي، تعليمات التحويل، وأسماء المستلمين.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setEditingMethod({
+                    id: `method-${Date.now()}`,
+                    code: 'custom',
+                    nameAr: 'طريقة دفع جديدة',
+                    nameEn: 'New Payment Method',
+                    recipientName: 'اسم المستلم المعتمد',
+                    accountIdentifier: '010XXXXXXXX',
+                    instructionsAr: 'قم بالتحويل إلى الرقم وارفع لقطة الشاشة.',
+                    instructionsEn: 'Transfer to the number and upload proof.',
+                    isEnabled: true,
+                    sortOrder: paymentMethods.length + 1,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                  })
+                }
+                className="px-4 py-2 rounded-xl glow-btn text-white text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>إضافة وسيلة دفع جديدة</span>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {paymentMethods.map((m) => (
                 <div
                   key={m.id}
-                  className="p-5 rounded-2xl glass-card border border-white/10 space-y-3"
+                  className="p-5 rounded-2xl glass-card border border-white/10 space-y-4 flex flex-col justify-between"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-sm">{m.nameAr}</span>
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        m.isEnabled ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-500'
-                      }`}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white text-sm">{m.nameAr}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          m.isEnabled ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-500'
+                        }`}
+                      >
+                        {m.isEnabled ? 'مفعل' : 'معطل'}
+                      </span>
+                    </div>
+
+                    <div className="text-xs space-y-1 text-slate-300">
+                      <p>
+                        <strong className="text-slate-400">اسم المستلم:</strong>{' '}
+                        <span className="text-white font-medium">{m.recipientName}</span>
+                      </p>
+                      <p>
+                        <strong className="text-slate-400">رقم التحويل / المعرف:</strong>{' '}
+                        <span className="font-mono text-cyan-300 font-bold">{m.accountIdentifier}</span>
+                      </p>
+                    </div>
+
+                    <p className="text-[11px] text-slate-400 line-clamp-3 bg-slate-900/80 p-2.5 rounded-xl border border-white/5 leading-relaxed">
+                      {m.instructionsAr}
+                    </p>
+                  </div>
+
+                  {/* Edit and Delete Actions */}
+                  <div className="pt-3 border-t border-white/5 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMethod(m)}
+                      className="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                     >
-                      {m.isEnabled ? 'مفعل' : 'معطل'}
-                    </span>
+                      <Edit className="w-3.5 h-3.5" />
+                      <span>تعديل</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePaymentMethod(m.id)}
+                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs transition-colors cursor-pointer"
+                      title="حذف وسيلة الدفع"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-
-                  <div className="text-xs space-y-1 text-slate-300">
-                    <p>
-                      <strong className="text-slate-400">اسم المستلم:</strong> {m.recipientName}
-                    </p>
-                    <p>
-                      <strong className="text-slate-400">رقم التحويل:</strong>{' '}
-                      <span className="font-mono text-cyan-300">{m.accountIdentifier}</span>
-                    </p>
-                  </div>
-
-                  <p className="text-[11px] text-slate-400 line-clamp-2 bg-slate-900/60 p-2 rounded-lg">
-                    {m.instructionsAr}
-                  </p>
                 </div>
               ))}
             </div>
+
+            {/* Modal for Editing / Creating Payment Method */}
+            {editingMethod && (
+              <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                <div className="glass-panel-glow rounded-3xl p-6 sm:p-8 border border-white/20 max-w-lg w-full space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-indigo-400" />
+                      <span>تعديل وسيلة الدفع: {editingMethod.nameAr}</span>
+                    </h3>
+                    <button
+                      onClick={() => setEditingMethod(null)}
+                      className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSavePaymentMethod} className="space-y-3.5 text-xs">
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">
+                        اسم طريقة الدفع بالعربية (يظهر للعميل)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingMethod.nameAr}
+                        onChange={(e) =>
+                          setEditingMethod({ ...editingMethod, nameAr: e.target.value })
+                        }
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-semibold text-slate-300 mb-1">
+                          اسم المستلم المعتمد
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={editingMethod.recipientName}
+                          onChange={(e) =>
+                            setEditingMethod({ ...editingMethod, recipientName: e.target.value })
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-semibold text-slate-300 mb-1">
+                          رقم التحويل / معرف المحفظة أو إنستاباي
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={editingMethod.accountIdentifier}
+                          onChange={(e) =>
+                            setEditingMethod({ ...editingMethod, accountIdentifier: e.target.value })
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-cyan-300 font-mono font-bold focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-300 mb-1">
+                        تعليمات التحويل للعميل
+                      </label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={editingMethod.instructionsAr}
+                        onChange={(e) =>
+                          setEditingMethod({ ...editingMethod, instructionsAr: e.target.value })
+                        }
+                        className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-3 pt-2">
+                      <input
+                        type="checkbox"
+                        id="methodEnabled"
+                        checked={editingMethod.isEnabled}
+                        onChange={(e) =>
+                          setEditingMethod({ ...editingMethod, isEnabled: e.target.checked })
+                        }
+                        className="w-4 h-4 rounded text-indigo-600 bg-slate-900"
+                      />
+                      <label htmlFor="methodEnabled" className="text-slate-300 font-medium">
+                        تفعيل طريقة الدفع هذه في صفحة إتمام الطلب للعملاء
+                      </label>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setEditingMethod(null)}
+                        className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold hover:bg-slate-700"
+                      >
+                        إلغاء
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={methodSaving}
+                        className="px-5 py-2 rounded-xl glow-btn text-white font-bold cursor-pointer disabled:opacity-50"
+                      >
+                        {methodSaving ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

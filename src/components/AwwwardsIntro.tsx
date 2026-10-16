@@ -26,30 +26,31 @@ export default function AwwwardsIntro({ onComplete }: { onComplete?: () => void 
       return;
     }
 
-    // Progress counter animation
+    // Progress counter animation - Slower, high-precision cinematic pacing
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setTimeout(() => {
             handleDismiss();
-          }, 400);
+          }, 850);
           return 100;
         }
-        const jump = Math.floor(Math.random() * 8) + 3;
+        // Slower realistic technological jumps
+        const jump = Math.random() > 0.4 ? 1 : 2;
         const next = Math.min(100, prev + jump);
         return next;
       });
-    }, 60);
+    }, 65);
 
     return () => clearInterval(interval);
   }, [onComplete]);
 
   useEffect(() => {
-    if (progress < 25) setStatusIndex(0);
-    else if (progress < 50) setStatusIndex(1);
-    else if (progress < 75) setStatusIndex(2);
-    else if (progress < 95) setStatusIndex(3);
+    if (progress < 20) setStatusIndex(0);
+    else if (progress < 42) setStatusIndex(1);
+    else if (progress < 68) setStatusIndex(2);
+    else if (progress < 90) setStatusIndex(3);
     else setStatusIndex(4);
   }, [progress]);
 
