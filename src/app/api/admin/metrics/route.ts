@@ -83,6 +83,7 @@ export async function GET() {
         refundedOrders,
         delayedOrdersCount: delayedOrders.length,
       },
+      quota: db.getQuotaStatus(),
       delayedOrders,
       activityFeed: auditLogs,
       chartData: Object.values(last7Days),

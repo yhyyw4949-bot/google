@@ -22,7 +22,16 @@ export async function POST(
     }
 
     const body = await req.json();
-    const { action, rejectionReason, dispatchNotes, internalNote, language = 'ar' } = body;
+    const {
+      action,
+      rejectionReason,
+      dispatchNotes,
+      internalNote,
+      language = 'ar',
+      sendEmail = true,
+      customSubject,
+      customMessage,
+    } = body;
 
     const now = new Date().toISOString();
     const prevPaymentStatus = order.paymentStatus;
@@ -50,19 +59,23 @@ export async function POST(
           });
         }
 
-        // Email customer
-        await sendTransactionalEmail({
-          orderId: order.id,
-          recipientEmail: order.customerEmail,
-          templateType: 'payment_approved',
-          language,
-          data: {
-            customerName: order.customerName,
+        // Email customer with optional custom subject and custom content
+        if (sendEmail !== false) {
+          await sendTransactionalEmail({
             orderId: order.id,
-            productName: order.productName,
-            priceFormatted: `${(order.priceCents / 100).toFixed(2)} ${order.currency}`,
-          },
-        });
+            recipientEmail: order.customerEmail,
+            templateType: 'payment_approved',
+            language,
+            customSubject,
+            customBody: customMessage,
+            data: {
+              customerName: order.customerName,
+              orderId: order.id,
+              productName: order.productName,
+              priceFormatted: `${(order.priceCents / 100).toFixed(2)} ${order.currency}`,
+            },
+          });
+        }
         break;
 
       case 'reject_payment':
@@ -122,19 +135,23 @@ export async function POST(
         updates.invitationSentAt = now;
         updates.actualDispatchNotes = dispatchNotes || 'تم إرسال الدعوة الرسمية إلى بريد العميل.';
 
-        await sendTransactionalEmail({
-          orderId: order.id,
-          recipientEmail: order.customerEmail,
-          templateType: 'invitation_sent',
-          language,
-          data: {
-            customerName: order.customerName,
+        if (sendEmail !== false) {
+          await sendTransactionalEmail({
             orderId: order.id,
-            productName: order.productName,
-            priceFormatted: `${(order.priceCents / 100).toFixed(2)} ${order.currency}`,
-            dispatchNotes: updates.actualDispatchNotes as string,
-          },
-        });
+            recipientEmail: order.customerEmail,
+            templateType: 'invitation_sent',
+            language,
+            customSubject,
+            customBody: customMessage,
+            data: {
+              customerName: order.customerName,
+              orderId: order.id,
+              productName: order.productName,
+              priceFormatted: `${(order.priceCents / 100).toFixed(2)} ${order.currency}`,
+              dispatchNotes: updates.actualDispatchNotes as string,
+            },
+          });
+        }
         break;
 
       case 'complete_order':

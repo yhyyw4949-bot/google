@@ -82,8 +82,8 @@ export default function HeroSection() {
                   <AlertOctagon className="w-4 h-4 text-rose-400" />
                   <span>
                     {language === 'ar'
-                      ? 'نفدت الكمية بالكامل (5/5 طلبات)'
-                      : 'SOLD OUT (Batch Limit 5/5 Reached)'}
+                      ? `نفدت الكمية بالكامل (${quota.maxQuota}/${quota.maxQuota} طلبات)`
+                      : `SOLD OUT (Batch Limit ${quota.maxQuota}/${quota.maxQuota} Reached)`}
                   </span>
                 </div>
               ) : (

@@ -41,6 +41,9 @@ import {
   Mail,
   History,
   Info,
+  Boxes,
+  Sparkles,
+  Send,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -75,6 +78,25 @@ export default function AdminDashboardPage() {
   const [dispatchNotes, setDispatchNotes] = useState('');
   const [internalNote, setInternalNote] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Email customization for modal
+  const [sendEmailNotification, setSendEmailNotification] = useState(true);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [showEmailPreview, setShowEmailPreview] = useState(false);
+
+  // Stock / Quota state
+  const [quota, setQuota] = useState<{
+    maxQuota: number;
+    activeOrdersCount: number;
+    remainingSlots: number;
+    isSoldOut: boolean;
+    batchNumber: number;
+    totalLifetimeOrdersCount: number;
+    batchResetTimestamp?: string;
+  } | null>(null);
+  const [restockQuotaInput, setRestockQuotaInput] = useState<number>(5);
+  const [isRestocking, setIsRestocking] = useState(false);
 
   // Other entities
   const [product, setProduct] = useState<ProductConfig | null>(null);
@@ -120,6 +142,10 @@ export default function AdminDashboardPage() {
         setDelayedOrders(mData.delayedOrders || []);
         setActivityFeed(mData.activityFeed || []);
         setChartData(mData.chartData || []);
+        if (mData.quota) {
+          setQuota(mData.quota);
+          setRestockQuotaInput(mData.quota.maxQuota || 5);
+        }
       }
 
       if (ordersRes.ok) {
@@ -181,6 +207,11 @@ export default function AdminDashboardPage() {
     switch (actionModal.type) {
       case 'approve':
         actionKey = 'approve_payment';
+        body.sendEmail = sendEmailNotification;
+        if (sendEmailNotification) {
+          body.customSubject = emailSubject;
+          body.customMessage = emailBody;
+        }
         break;
       case 'reject':
         actionKey = 'reject_payment';
@@ -193,6 +224,11 @@ export default function AdminDashboardPage() {
       case 'dispatch':
         actionKey = 'invitation_sent';
         body.dispatchNotes = dispatchNotes;
+        body.sendEmail = sendEmailNotification;
+        if (sendEmailNotification) {
+          body.customSubject = emailSubject;
+          body.customMessage = emailBody;
+        }
         break;
       case 'complete':
         actionKey = 'complete_order';
@@ -238,6 +274,82 @@ export default function AdminDashboardPage() {
       setNotice({ type: 'error', message: msg });
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  // Open Approve Modal with smart prefilled email
+  const openApproveModal = (targetOrder: Order) => {
+    setActionModal({ type: 'approve', orderId: targetOrder.id, isOpen: true });
+    setSendEmailNotification(true);
+    const defaultSubj =
+      siteSettings?.defaultApprovalEmailSubjectAr ||
+      `تم تأكيد دفع طلبك بنجاح (${targetOrder.id}) - جاري تجهيز الدعوة`;
+    const defaultMsg =
+      siteSettings?.defaultApprovalEmailBodyAr ||
+      `مرحباً ${targetOrder.customerName}،\nتم تأكيد استلام دفعتك بنجاح لطلبك رقم ${targetOrder.id} بقيمة ${(targetOrder.priceCents / 100).toFixed(2)} جنيه مصري.\nيقوم فريق العمل الآن بتجهيز وإرسال دعوة تفعيل Google AI Pro الرسمية إلى بريدك الإلكتروني (${targetOrder.customerEmail}).\nالهدف الزمني المقدر للمعالجة هو 5 دقائق رهن التوافر.\nشكراً لاختيارك متجرنا!`;
+
+    setEmailSubject(defaultSubj);
+    setEmailBody(defaultMsg);
+    setInternalNote('');
+    setShowEmailPreview(false);
+  };
+
+  // Open Dispatch Modal with smart prefilled email
+  const openDispatchModal = (targetOrder: Order) => {
+    setActionModal({ type: 'dispatch', orderId: targetOrder.id, isOpen: true });
+    setSendEmailNotification(true);
+    const defaultSubj =
+      siteSettings?.defaultDispatchEmailSubjectAr ||
+      `تم إرسال دعوة Google AI Pro الخاصة بك! (${targetOrder.id})`;
+    const defaultMsg =
+      siteSettings?.defaultDispatchEmailBodyAr ||
+      `مرحباً ${targetOrder.customerName}،\nيسعدنا إبلاغك بأنه تم إرسال دعوة تفعيل اشتراك Google AI Pro إلى بريدك الإلكتروني بنجاح.\nيرجى مراجعة صندوق الوارد (Inbox) وكذلك مجلد الرسائل الترويجية (Promotions) أو الرسائل غير المرغوب فيها (Spam) لقبول الدعوة وتفعيل الاشتراك.\nنتمنى لك تجربة ممتعة ومثمرة مع أقوى أدوات الذكاء الاصطناعي!`;
+
+    setEmailSubject(defaultSubj);
+    setEmailBody(defaultMsg);
+    setDispatchNotes('تم إرسال الدعوة الرسمية بنجاح إلى بريد العميل.');
+    setShowEmailPreview(false);
+  };
+
+  // Stock renewal / Restock action
+  const handleRestock = async () => {
+    try {
+      setIsRestocking(true);
+      const res = await fetch('/api/admin/stock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restock', newQuota: restockQuotaInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to restock');
+      setNotice({ type: 'success', message: data.message || 'تم تجديد الحصة وفتح دفعة جديدة بنجاح!' });
+      loadAllData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to restock';
+      setNotice({ type: 'error', message: msg });
+    } finally {
+      setIsRestocking(false);
+    }
+  };
+
+  // Stock limit update
+  const handleUpdateQuotaLimit = async () => {
+    try {
+      setIsRestocking(true);
+      const res = await fetch('/api/admin/stock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_quota', newQuota: restockQuotaInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update quota limit');
+      setNotice({ type: 'success', message: data.message || 'تم تحديث سقف الحصة بنجاح!' });
+      loadAllData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to update quota limit';
+      setNotice({ type: 'error', message: msg });
+    } finally {
+      setIsRestocking(false);
     }
   };
 
@@ -448,6 +560,51 @@ export default function AdminDashboardPage() {
             </button>
           </div>
         )}
+
+        {/* Live Stock & Quota Notification Bar */}
+        <div className="p-4 rounded-2xl glass-card border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/60 shadow-lg shadow-indigo-500/5">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2.5 rounded-xl flex-shrink-0 ${
+                quota?.isSoldOut ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'
+              }`}
+            >
+              <Boxes className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold text-white">
+                  المخزون والحصة للدفعة #{quota?.batchNumber || 1}
+                </span>
+                {quota?.isSoldOut ? (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                    نفدت الكمية المتاحة ({quota?.maxQuota || 5}/{quota?.maxQuota || 5})
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    متاح للطلب ({quota?.remainingSlots || 0} متبقي من {quota?.maxQuota || 5})
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                طلبات الدفعة الحالية المحجوزة: <strong className="text-white font-mono">{quota?.activeOrdersCount || 0}</strong> • إجمالي كافة الطلبات المسجلة: <strong className="text-cyan-400 font-mono">{quota?.totalLifetimeOrdersCount || orders.length}</strong> طلب
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              type="button"
+              disabled={isRestocking}
+              onClick={handleRestock}
+              className="px-4 py-2 rounded-xl glow-btn text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              title="تجديد الحصة وفتح دفعة جديدة مع الحفاظ على سجل الطلبات"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>{isRestocking ? 'جاري التجديد...' : 'تجديد الحصة الآن (Restock)'}</span>
+            </button>
+          </div>
+        </div>
 
         {/* Overview Metrics Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
@@ -730,11 +887,9 @@ export default function AdminDashboardPage() {
                               {/* Quick Approve Payment */}
                               {o.paymentStatus !== 'approved' && (
                                 <button
-                                  onClick={() =>
-                                    setActionModal({ type: 'approve', orderId: o.id, isOpen: true })
-                                  }
+                                  onClick={() => openApproveModal(o)}
                                   className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400"
-                                  title="قبول وتأكيد الدفع"
+                                  title="قبول وتأكيد الدفع مع إشعار البريد"
                                 >
                                   <Check className="w-3.5 h-3.5" />
                                 </button>
@@ -758,11 +913,9 @@ export default function AdminDashboardPage() {
                                 o.fulfillmentStatus !== 'invitation_sent' &&
                                 o.fulfillmentStatus !== 'completed' && (
                                   <button
-                                    onClick={() =>
-                                      setActionModal({ type: 'dispatch', orderId: o.id, isOpen: true })
-                                    }
+                                    onClick={() => openDispatchModal(o)}
                                     className="px-2 py-1 rounded-lg bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 text-[10px] font-bold"
-                                    title="تسجيل إرسال الدعوة"
+                                    title="تسجيل إرسال الدعوة مع إشعار البريد"
                                   >
                                     إرسال الدعوة
                                   </button>
@@ -794,13 +947,113 @@ export default function AdminDashboardPage() {
 
         {/* ================= TAB 2: PRODUCT MANAGEMENT ================= */}
         {activeTab === 'products' && product && (
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Package className="w-5 h-5 text-indigo-400" />
-              <span>إعدادات المنتج والأسعار الحالية</span>
-            </h2>
+          <div className="space-y-6">
+            {/* Stock & Quota Manager Card */}
+            <div className="glass-panel-glow rounded-3xl p-6 sm:p-8 border border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-purple-950/20 to-slate-950/60 space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                      الدفعة الحالية: رقم #{quota?.batchNumber || 1}
+                    </span>
+                    {quota?.isSoldOut ? (
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                        نفدت الكمية الحالية ({quota?.maxQuota || 5}/{quota?.maxQuota || 5})
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        متاح للطلب ({quota?.remainingSlots || 0} متبقي)
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <Boxes className="w-5 h-5 text-indigo-400" />
+                    <span>التحكم في المخزون وتجديد الحصة (Stock & Restock Manager)</span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    يمكنك ضبط سقف طلبات الدفعة، وتجديد الحصة لفتح دفعة طلبات جديدة للعملاء في أي وقت مع الحفاظ التام على كامل سجل الطلبات السابقة.
+                  </p>
+                </div>
 
-            <form onSubmit={handleSaveProduct} className="space-y-6">
+                {/* Restock Button */}
+                <button
+                  type="button"
+                  disabled={isRestocking}
+                  onClick={handleRestock}
+                  className="px-5 py-3 rounded-2xl glow-btn text-white text-xs font-bold flex items-center gap-2 self-start sm:self-auto shadow-lg shadow-indigo-600/30 cursor-pointer disabled:opacity-50"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-300 animate-spin" style={{ animationDuration: '4s' }} />
+                  <span>{isRestocking ? 'جاري التجديد...' : '⚡ تجديد الحصة وفتح دفعة جديدة الآن'}</span>
+                </button>
+              </div>
+
+              {/* Progress Bar & Counters */}
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-300">
+                    استهلاك الدفعة الحالية: <strong className="text-white font-mono text-sm">{quota?.activeOrdersCount || 0}</strong> من أصل <strong className="text-amber-300 font-mono text-sm">{quota?.maxQuota || 5}</strong> طلبات
+                  </span>
+                  <span className="text-slate-400">
+                    المتبقي: <strong className="text-emerald-400 font-mono text-sm">{quota?.remainingSlots || 0}</strong> | الإجمالي التاريخي: <strong className="text-cyan-400 font-mono text-sm">{quota?.totalLifetimeOrdersCount || orders.length}</strong> طلب
+                  </span>
+                </div>
+
+                <div className="h-3.5 w-full bg-slate-900 rounded-full overflow-hidden border border-white/10 p-0.5">
+                  <div
+                    className={`h-full rounded-full transition-all duration-700 ${
+                      quota?.isSoldOut
+                        ? 'bg-gradient-to-r from-rose-500 to-amber-500'
+                        : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400'
+                    }`}
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        Math.round(((quota?.activeOrdersCount || 0) / (quota?.maxQuota || 5)) * 100)
+                      )}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Limit Adjustment Controls */}
+              <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <label className="text-slate-300 font-semibold">
+                    سقف الحصة لكل دفعة:
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={restockQuotaInput}
+                    onChange={(e) => setRestockQuotaInput(Number(e.target.value))}
+                    className="w-20 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-amber-300 font-mono font-bold text-center focus:outline-none focus:border-indigo-500"
+                  />
+                  <span className="text-slate-500 text-[11px]">طلبات</span>
+                  <button
+                    type="button"
+                    disabled={isRestocking}
+                    onClick={handleUpdateQuotaLimit}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold cursor-pointer"
+                  >
+                    تطبيق السقف
+                  </button>
+                </div>
+
+                <div className="text-[11px] text-slate-500">
+                  {quota?.batchResetTimestamp && (
+                    <span>آخر تجديد للدفعة: {new Date(quota.batchResetTimestamp).toLocaleString('ar-EG')}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <Package className="w-5 h-5 text-indigo-400" />
+                <span>إعدادات المنتج والأسعار الحالية</span>
+              </h2>
+
+              <form onSubmit={handleSaveProduct} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -932,6 +1185,7 @@ export default function AdminDashboardPage() {
               </button>
             </form>
           </div>
+        </div>
         )}
 
         {/* ================= TAB 3: PAYMENT METHODS ================= */}
@@ -1276,6 +1530,75 @@ export default function AdminDashboardPage() {
                 </label>
               </div>
 
+              {/* Default Transactional Email Templates Configuration */}
+              <div className="pt-4 border-t border-white/10 space-y-4">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-indigo-400" />
+                  <span>تخصيص نصوص وقوالب الإيميل الافتراضية للعملاء</span>
+                </h3>
+                <p className="text-xs text-slate-400">
+                  يمكنك تحديد العنوان والنص الافتراضي الذي يظهر تلقائياً في نافذة تأكيد الدفع وإرسال الدعوة.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-3 p-4 rounded-2xl bg-slate-900/60 border border-emerald-500/20">
+                    <span className="text-xs font-bold text-emerald-400 block">قالب إيميل تأكيد الدفع (Approve Payment):</span>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">العنوان الافتراضي</label>
+                      <input
+                        type="text"
+                        value={siteSettings.defaultApprovalEmailSubjectAr || ''}
+                        onChange={(e) =>
+                          setSiteSettings({ ...siteSettings, defaultApprovalEmailSubjectAr: e.target.value })
+                        }
+                        placeholder="تم تأكيد دفع طلبك بنجاح..."
+                        className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">النص الافتراضي للرسالة</label>
+                      <textarea
+                        rows={3}
+                        value={siteSettings.defaultApprovalEmailBodyAr || ''}
+                        onChange={(e) =>
+                          setSiteSettings({ ...siteSettings, defaultApprovalEmailBodyAr: e.target.value })
+                        }
+                        placeholder="تم التحقق من صحة التحويل بنجاح..."
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs leading-relaxed focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 p-4 rounded-2xl bg-slate-900/60 border border-purple-500/20">
+                    <span className="text-xs font-bold text-purple-400 block">قالب إيميل إرسال الدعوة (Dispatch Invitation):</span>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">العنوان الافتراضي</label>
+                      <input
+                        type="text"
+                        value={siteSettings.defaultDispatchEmailSubjectAr || ''}
+                        onChange={(e) =>
+                          setSiteSettings({ ...siteSettings, defaultDispatchEmailSubjectAr: e.target.value })
+                        }
+                        placeholder="تم إرسال دعوة Google AI Pro الخاصة بك..."
+                        className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-300 mb-1">النص الافتراضي للرسالة</label>
+                      <textarea
+                        rows={3}
+                        value={siteSettings.defaultDispatchEmailBodyAr || ''}
+                        onChange={(e) =>
+                          setSiteSettings({ ...siteSettings, defaultDispatchEmailBodyAr: e.target.value })
+                        }
+                        placeholder="يسعدنا إبلاغك بأنه تم إرسال دعوة تفعيل الاشتراك..."
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs leading-relaxed focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 className="px-6 py-2.5 rounded-xl glow-btn text-white font-bold text-xs"
@@ -1472,9 +1795,7 @@ export default function AdminDashboardPage() {
               {/* Action Buttons inside Drawer */}
               <div className="pt-4 border-t border-white/10 flex flex-wrap gap-2">
                 <button
-                  onClick={() => {
-                    setActionModal({ type: 'approve', orderId: selectedOrder.id, isOpen: true });
-                  }}
+                  onClick={() => openApproveModal(selectedOrder)}
                   className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs"
                 >
                   قبول وتأكيد الدفع
@@ -1488,9 +1809,7 @@ export default function AdminDashboardPage() {
                   رفض الدفع مع سبب
                 </button>
                 <button
-                  onClick={() => {
-                    setActionModal({ type: 'dispatch', orderId: selectedOrder.id, isOpen: true });
-                  }}
+                  onClick={() => openDispatchModal(selectedOrder)}
                   className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs"
                 >
                   تسجيل إرسال الدعوة
@@ -1511,12 +1830,228 @@ export default function AdminDashboardPage() {
 
         {/* ================= ACTION CONFIRMATION MODAL ================= */}
         {actionModal && (
-          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="glass-panel-glow rounded-3xl p-6 sm:p-8 border border-white/20 max-w-md w-full space-y-4">
-              <h3 className="text-lg font-bold text-white">
-                تأكيد العملية ({actionModal.type.toUpperCase()})
-              </h3>
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+            <div className="glass-panel-glow rounded-3xl p-6 sm:p-8 border border-white/20 max-w-xl w-full max-h-[92vh] overflow-y-auto space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                  {actionModal.type === 'approve' && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                  {actionModal.type === 'dispatch' && <Send className="w-5 h-5 text-purple-400" />}
+                  {actionModal.type === 'reject' && <XCircle className="w-5 h-5 text-rose-400" />}
+                  <span>
+                    {actionModal.type === 'approve' && 'الموافقة على الدفع وتجهيز الطلب'}
+                    {actionModal.type === 'dispatch' && 'تسجيل إرسال الدعوة وإشعار العميل'}
+                    {actionModal.type === 'reject' && 'رفض إثبات الدفع'}
+                    {actionModal.type === 'request_info' && 'طلب معلومات إضافية من العميل'}
+                    {actionModal.type === 'complete' && 'إكمال الطلب نهائياً'}
+                    {actionModal.type === 'cancel' && 'إلغاء الطلب'}
+                    {actionModal.type === 'refund' && 'تسجيل استرداد المبلغ'}
+                    {actionModal.type === 'note' && 'إضافة ملاحظة داخلية للإدارة'}
+                  </span>
+                </h3>
+                <span className="font-mono text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+                  {actionModal.orderId}
+                </span>
+              </div>
 
+              {/* APPROVE ACTION: EMAIL CUSTOMIZATION */}
+              {actionModal.type === 'approve' && (
+                <div className="space-y-4">
+                  <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300">
+                    <p className="font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>تأكيد استلام الدفع وتحويل الطلب إلى قيد التجهيز</span>
+                    </p>
+                    <p className="text-[11px] text-emerald-200/80 mt-1">
+                      سيتم إشعار العميل فورياً عبر البريد الإلكتروني. يمكنك مراجعة وتعديل نص ومحتوى الإيميل بالأسفل قبل الإرسال.
+                    </p>
+                  </div>
+
+                  {/* Toggle Send Email */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-indigo-400" />
+                      <span className="text-xs font-semibold text-slate-200">إرسال إشعار بريدي تلقائي للعميل</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={sendEmailNotification}
+                        onChange={(e) => setSendEmailNotification(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Customizable Email Subject & Body */}
+                  {sendEmailNotification && (
+                    <div className="space-y-3 p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+                          <Edit className="w-3.5 h-3.5" />
+                          <span>تعديل محتويات الإيميل المرسل للعميل:</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowEmailPreview(!showEmailPreview)}
+                          className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 underline cursor-pointer"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>{showEmailPreview ? 'إخفاء المعاينة' : 'معاينة شكل الإيميل'}</span>
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                          عنوان البريد الإلكتروني (Subject)
+                        </label>
+                        <input
+                          type="text"
+                          value={emailSubject}
+                          onChange={(e) => setEmailSubject(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-medium focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                          نص رسالة البريد (Message Body)
+                        </label>
+                        <textarea
+                          rows={5}
+                          value={emailBody}
+                          onChange={(e) => setEmailBody(e.target.value)}
+                          className="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs leading-relaxed focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
+
+                      {showEmailPreview && (
+                        <div className="p-3.5 rounded-xl bg-slate-950 border border-indigo-500/30 space-y-2">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">معاينة الرسالة كما ستصل للعميل:</span>
+                          <p className="text-xs font-bold text-indigo-300 border-b border-white/5 pb-1">{emailSubject}</p>
+                          <div className="text-[11px] text-slate-300 whitespace-pre-line leading-relaxed">
+                            {emailBody}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      ملاحظة داخلية سرية للإدارة (اختياري)
+                    </label>
+                    <input
+                      type="text"
+                      value={internalNote}
+                      onChange={(e) => setInternalNote(e.target.value)}
+                      placeholder="مثال: تم التأكد من وصول المبلغ عبر فودافون كاش..."
+                      className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* DISPATCH ACTION: EMAIL CUSTOMIZATION */}
+              {actionModal.type === 'dispatch' && (
+                <div className="space-y-4">
+                  <div className="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300">
+                    <p className="font-bold flex items-center gap-1.5">
+                      <Send className="w-4 h-4 text-purple-400" />
+                      <span>تسجيل إرسال الدعوة وإشعار العميل</span>
+                    </p>
+                    <p className="text-[11px] text-purple-200/80 mt-1">
+                      سيتم تحويل حالة الطلب إلى (تم إرسال الدعوة) وتحديث الجدول الزمني للعميل.
+                    </p>
+                  </div>
+
+                  {/* Toggle Send Email */}
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-purple-400" />
+                      <span className="text-xs font-semibold text-slate-200">إرسال إشعار بريدي تلقائي للعميل</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={sendEmailNotification}
+                        onChange={(e) => setSendEmailNotification(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Customizable Email */}
+                  {sendEmailNotification && (
+                    <div className="space-y-3 p-4 rounded-2xl bg-slate-900/90 border border-purple-500/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                          <Edit className="w-3.5 h-3.5" />
+                          <span>تعديل إشعار إرسال الدعوة:</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowEmailPreview(!showEmailPreview)}
+                          className="text-[11px] text-purple-400 hover:text-purple-300 font-medium flex items-center gap-1 underline cursor-pointer"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>{showEmailPreview ? 'إخفاء المعاينة' : 'معاينة شكل الإيميل'}</span>
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                          عنوان البريد الإلكتروني (Subject)
+                        </label>
+                        <input
+                          type="text"
+                          value={emailSubject}
+                          onChange={(e) => setEmailSubject(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-medium focus:outline-none focus:border-purple-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                          نص رسالة البريد (Message Body)
+                        </label>
+                        <textarea
+                          rows={4}
+                          value={emailBody}
+                          onChange={(e) => setEmailBody(e.target.value)}
+                          className="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs leading-relaxed focus:outline-none focus:border-purple-500"
+                        />
+                      </div>
+
+                      {showEmailPreview && (
+                        <div className="p-3.5 rounded-xl bg-slate-950 border border-purple-500/30 space-y-2">
+                          <span className="text-[10px] uppercase font-bold text-slate-500 block">معاينة الرسالة كما ستصل للعميل:</span>
+                          <p className="text-xs font-bold text-purple-300 border-b border-white/5 pb-1">{emailSubject}</p>
+                          <div className="text-[11px] text-slate-300 whitespace-pre-line leading-relaxed">
+                            {emailBody}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      ملاحظات التفعيل الفعلي (تُسجل في سجل الطلب)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={dispatchNotes}
+                      onChange={(e) => setDispatchNotes(e.target.value)}
+                      placeholder="مثال: تم إرسال رابط الدعوة إلى بريدك الإلكتروني بنجاح."
+                      className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* REJECT ACTION */}
               {actionModal.type === 'reject' && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -1532,41 +2067,41 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              {actionModal.type === 'dispatch' && (
+              {actionModal.type === 'request_info' && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    ملاحظات الإرسال الفعلي (تُسجل وتُرسل للعميل)
+                    المعلومات المطلوبة من العميل <span className="text-amber-400">*</span>
                   </label>
                   <textarea
                     rows={3}
-                    value={dispatchNotes}
-                    onChange={(e) => setDispatchNotes(e.target.value)}
-                    placeholder="مثال: تم إرسال رابط الدعوة إلى بريدك الإلكتروني بنجاح."
-                    className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-purple-500"
+                    value={actionReason}
+                    onChange={(e) => setActionReason(e.target.value)}
+                    placeholder="مثال: يرجى إرسال رقم العملية المرجعي للتحويل."
+                    className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-amber-500"
                   />
                 </div>
               )}
 
-              {(actionModal.type === 'note' || actionModal.type === 'approve') && (
+              {actionModal.type === 'note' && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    ملاحظة داخلية إضافية (اختياري)
+                    الملاحظة الداخلية (سرية للإدارة فقط) <span className="text-indigo-400">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={3}
                     value={internalNote}
                     onChange={(e) => setInternalNote(e.target.value)}
-                    placeholder="ملاحظات سرية للإدارة..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none"
+                    placeholder="اكتب ملاحظة للإدارة..."
+                    className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none"
                   />
                 </div>
               )}
 
-              <div className="pt-4 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setActionModal(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700 cursor-pointer"
                 >
                   إلغاء
                 </button>
@@ -1574,7 +2109,7 @@ export default function AdminDashboardPage() {
                   type="button"
                   disabled={actionLoading}
                   onClick={handleOrderAction}
-                  className="px-5 py-2 rounded-xl glow-btn text-white text-xs font-bold cursor-pointer disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl glow-btn text-white text-xs font-bold cursor-pointer disabled:opacity-50 shadow-lg shadow-indigo-600/30"
                 >
                   {actionLoading ? 'جاري التنفيذ...' : 'تأكيد وتنفيذ'}
                 </button>

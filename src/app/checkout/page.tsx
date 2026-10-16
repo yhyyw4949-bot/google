@@ -103,8 +103,8 @@ export default function CheckoutPage() {
     if (!productData.isAvailable || productData.isSoldOut) {
       setErrorMsg(
         language === 'ar'
-          ? 'عذراً، نفدت الكمية المتاحة لهذه الدفعة (5/5 طلبات). يرجى الانتظار لفتح الدفعة القادمة.'
-          : 'Sorry, this batch is sold out (5/5 orders reached).'
+          ? `عذراً، نفدت الكمية المتاحة لهذه الدفعة (${productData.maxQuota}/${productData.maxQuota} طلبات). يرجى الانتظار لفتح الدفعة القادمة.`
+          : `Sorry, this batch is sold out (${productData.maxQuota}/${productData.maxQuota} orders reached).`
       );
       return;
     }

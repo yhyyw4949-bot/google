@@ -36,6 +36,8 @@ export interface ProductConfig {
   durationEn: string;
   deliveryTargetMins: number; // e.g. 5 mins
   maxQuota: number; // e.g. 5 orders only
+  batchResetTimestamp?: string; // Timestamp when current batch was opened/renewed
+  batchNumber?: number; // Sequential batch counter (Batch #1, #2, etc.)
   disclaimerAr: string;
   disclaimerEn: string;
   featureCards: FeatureCardConfig[];
@@ -166,6 +168,7 @@ export interface Order {
   invitationSentAt?: string;
   completedAt?: string;
   actualDispatchNotes?: string;
+  batchNumber?: number;
   createdAt: string;
   updatedAt: string;
   proofs?: PaymentProof[];
@@ -185,5 +188,9 @@ export interface SiteSettings {
   announcementEn: string;
   isAnnouncementActive: boolean;
   maintenanceMode: boolean;
+  defaultApprovalEmailSubjectAr?: string;
+  defaultApprovalEmailBodyAr?: string;
+  defaultDispatchEmailSubjectAr?: string;
+  defaultDispatchEmailBodyAr?: string;
   updatedAt: string;
 }

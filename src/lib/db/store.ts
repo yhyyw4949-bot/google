@@ -85,6 +85,8 @@ const INITIAL_DATA: DatabaseData = {
       durationEn: 'Activation invitation for available subscription under Google terms',
       deliveryTargetMins: 5,
       maxQuota: 5, // Exactly 5 orders limit batch
+      batchResetTimestamp: '2026-10-16T00:00:00.000Z',
+      batchNumber: 1,
       disclaimerAr: 'تنبيه: هذه خدمة وساطة مستقلة. تختلف المزايا وحدود الاستخدام الدقيقة وفق شروط خطط Google الحالية، وأهلية الحساب الجغرافي. لا تتضمن حسابات YouTube Premium مالم يذكر ذلك صراحة.',
       disclaimerEn: 'Notice: This is an independent intermediary service. Exact benefits and usage limits depend on current Google plan terms and account eligibility. Does not include YouTube Premium unless explicitly verified.',
       featureCards: [
@@ -220,7 +222,8 @@ const INITIAL_DATA: DatabaseData = {
       invitationSentAt: '2026-10-16T11:05:00.000Z',
       completedAt: '2026-10-16T11:08:00.000Z',
       actualDispatchNotes: 'تم إرسال الدعوة الرسمية بنجاح عبر نظام إدارة الدعوات المعتمد.',
-      createdAt: '2026-10-16T11:00:00.000Z',
+      batchNumber: 1,
+      createdAt: '2026-10-16T10:00:00.000Z',
       updatedAt: '2026-10-16T11:08:00.000Z',
     },
     {
@@ -236,8 +239,9 @@ const INITIAL_DATA: DatabaseData = {
       paymentMethodName: 'إنستاباي (InstaPay)',
       paymentStatus: 'receipt_submitted',
       fulfillmentStatus: 'pending',
-      createdAt: '2026-10-16T14:40:00.000Z',
-      updatedAt: '2026-10-16T14:42:00.000Z',
+      batchNumber: 1,
+      createdAt: '2026-10-16T10:15:00.000Z',
+      updatedAt: '2026-10-16T10:15:00.000Z',
     },
     {
       id: 'GAP-20261016-1003',
@@ -252,8 +256,9 @@ const INITIAL_DATA: DatabaseData = {
       paymentMethodName: 'فودافون كاش (Vodafone Cash)',
       paymentStatus: 'awaiting_payment',
       fulfillmentStatus: 'pending',
-      createdAt: '2026-10-16T15:10:00.000Z',
-      updatedAt: '2026-10-16T15:10:00.000Z',
+      batchNumber: 1,
+      createdAt: '2026-10-16T10:30:00.000Z',
+      updatedAt: '2026-10-16T10:30:00.000Z',
     },
   ],
   paymentProofs: [
@@ -404,7 +409,22 @@ class DBStore {
       }
       if (fs.existsSync(DB_FILE)) {
         const content = fs.readFileSync(DB_FILE, 'utf-8');
-        return JSON.parse(content) as DatabaseData;
+        const parsed = JSON.parse(content) as DatabaseData;
+        // Ensure product has batch fields
+        if (parsed.products && parsed.products[0]) {
+          if (!parsed.products[0].maxQuota) parsed.products[0].maxQuota = 5;
+          if (!parsed.products[0].batchNumber) parsed.products[0].batchNumber = 1;
+          if (!parsed.products[0].batchResetTimestamp) parsed.products[0].batchResetTimestamp = '2026-10-16T00:00:00.000Z';
+        }
+        // Ensure existing orders have batchNumber assigned
+        if (parsed.orders) {
+          parsed.orders.forEach((o) => {
+            if (o.batchNumber === undefined) {
+              o.batchNumber = 1;
+            }
+          });
+        }
+        return parsed;
       }
     } catch (err) {
       console.error('Error loading DB file, falling back to initial data', err);
@@ -467,6 +487,9 @@ class DBStore {
     if (!this.data.products[0].maxQuota) {
       this.data.products[0].maxQuota = 5;
     }
+    if (!this.data.products[0].batchNumber) {
+      this.data.products[0].batchNumber = 1;
+    }
     return this.data.products[0];
   }
 
@@ -475,20 +498,54 @@ class DBStore {
     activeOrdersCount: number;
     remainingSlots: number;
     isSoldOut: boolean;
+    batchResetTimestamp?: string;
+    batchNumber: number;
+    totalLifetimeOrdersCount: number;
   } {
     const prod = this.getProduct();
     const maxQuota = prod.maxQuota || 5;
-    const activeOrders = this.data.orders.filter(
-      (o) => o.fulfillmentStatus !== 'cancelled'
-    );
-    const activeOrdersCount = activeOrders.length;
+    const batchNumber = prod.batchNumber || 1;
+    const batchResetTime = prod.batchResetTimestamp ? new Date(prod.batchResetTimestamp).getTime() : 0;
+
+    // Filter orders created in the current batch that are not cancelled
+    const activeOrdersInBatch = this.data.orders.filter((o) => {
+      if (o.fulfillmentStatus === 'cancelled') return false;
+      const orderBatch = o.batchNumber || 1;
+      return orderBatch === batchNumber;
+    });
+    const activeOrdersCount = activeOrdersInBatch.length;
     const remainingSlots = Math.max(0, maxQuota - activeOrdersCount);
     const isSoldOut = activeOrdersCount >= maxQuota;
+
     return {
       maxQuota,
       activeOrdersCount,
       remainingSlots,
       isSoldOut,
+      batchResetTimestamp: prod.batchResetTimestamp,
+      batchNumber,
+      totalLifetimeOrdersCount: this.data.orders.length,
+    };
+  }
+
+  public restockBatch(newQuota?: number): {
+    product: ProductConfig;
+    quota: ReturnType<DBStore['getQuotaStatus']>;
+  } {
+    const prod = this.getProduct();
+    const nextBatchNumber = (prod.batchNumber || 1) + 1;
+    const updates: Partial<ProductConfig> = {
+      batchResetTimestamp: new Date().toISOString(),
+      batchNumber: nextBatchNumber,
+      isAvailable: true,
+    };
+    if (newQuota !== undefined && !isNaN(newQuota) && newQuota > 0) {
+      updates.maxQuota = newQuota;
+    }
+    const updated = this.updateProduct(updates);
+    return {
+      product: updated,
+      quota: this.getQuotaStatus(),
     };
   }
 
@@ -582,6 +639,9 @@ class DBStore {
   }
 
   public createOrder(order: Order): Order {
+    if (!order.batchNumber) {
+      order.batchNumber = this.getProduct().batchNumber || 1;
+    }
     this.data.orders.push(order);
     this.saveData(this.data);
     return order;

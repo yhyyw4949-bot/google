@@ -7,6 +7,8 @@ interface SendEmailParams {
   recipientEmail: string;
   templateType: EmailNotification['templateType'];
   language: 'ar' | 'en';
+  customSubject?: string;
+  customBody?: string;
   data: {
     customerName: string;
     orderId: string;
@@ -152,6 +154,31 @@ export async function sendTransactionalEmail(params: SendEmailParams): Promise<E
     default:
       subject = `تحديث بخصوص طلبك (${data.orderId})`;
       contentHtml = `<p>يوجد تحديث جديد على طلبك رقم ${data.orderId}.</p>`;
+  }
+
+  // Allow custom override from admin
+  if (params.customSubject && params.customSubject.trim()) {
+    subject = params.customSubject.trim();
+  }
+
+  if (params.customBody && params.customBody.trim()) {
+    const raw = params.customBody.trim();
+    const formatted = raw.includes('<p>') || raw.includes('<div>')
+      ? raw
+      : raw
+          .split('\n\n')
+          .map((para) => `<p style="margin: 12px 0; line-height: 1.7; color: #f1f5f9;">${para.replace(/\n/g, '<br/>')}</p>`)
+          .join('');
+    contentHtml = `
+      <div style="background: #1e293b; padding: 20px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 20px;">
+        ${formatted}
+      </div>
+      <div style="background: #0f172a; padding: 14px; border-radius: 8px; border: 1px solid #1e293b; font-size: 13px; color: #94a3b8;">
+        <p style="margin: 2px 0;"><strong>${isAr ? 'رقم الطلب:' : 'Order ID:'}</strong> <span style="color: #38bdf8;">${data.orderId}</span></p>
+        <p style="margin: 2px 0;"><strong>${isAr ? 'المنتج:' : 'Product:'}</strong> ${data.productName}</p>
+        <p style="margin: 2px 0;"><strong>${isAr ? 'المبلغ المؤكد:' : 'Confirmed Amount:'}</strong> ${data.priceFormatted}</p>
+      </div>
+    `;
   }
 
   const emailHtml = `
