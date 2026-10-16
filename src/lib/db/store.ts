@@ -740,7 +740,12 @@ class DBStore {
   }
 }
 
-// Global Singleton
+// Global Singleton with automatic method upgrade check
 const globalForStore = global as unknown as { __gap_db_store?: DBStore };
-export const db = globalForStore.__gap_db_store || new DBStore();
-if (process.env.NODE_ENV !== 'production') globalForStore.__gap_db_store = db;
+if (
+  !globalForStore.__gap_db_store ||
+  typeof (globalForStore.__gap_db_store as DBStore).restockBatch !== 'function'
+) {
+  globalForStore.__gap_db_store = new DBStore();
+}
+export const db = globalForStore.__gap_db_store;

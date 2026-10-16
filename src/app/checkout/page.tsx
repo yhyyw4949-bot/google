@@ -51,7 +51,7 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    fetch('/api/public/config')
+    fetch('/api/public/config', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.product) {

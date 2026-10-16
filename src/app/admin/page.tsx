@@ -126,14 +126,14 @@ export default function AdminDashboardPage() {
       setLoading(true);
       const [metricsRes, ordersRes, productRes, methodsRes, customersRes, settingsRes, auditRes, emailRes] =
         await Promise.all([
-          fetch('/api/admin/metrics'),
-          fetch('/api/admin/orders'),
-          fetch('/api/admin/product'),
-          fetch('/api/admin/payment-methods'),
-          fetch('/api/admin/customers'),
-          fetch('/api/admin/settings'),
-          fetch('/api/admin/audit-logs'),
-          fetch('/api/admin/email-logs'),
+          fetch('/api/admin/metrics', { cache: 'no-store' }),
+          fetch('/api/admin/orders', { cache: 'no-store' }),
+          fetch('/api/admin/product', { cache: 'no-store' }),
+          fetch('/api/admin/payment-methods', { cache: 'no-store' }),
+          fetch('/api/admin/customers', { cache: 'no-store' }),
+          fetch('/api/admin/settings', { cache: 'no-store' }),
+          fetch('/api/admin/audit-logs', { cache: 'no-store' }),
+          fetch('/api/admin/email-logs', { cache: 'no-store' }),
         ]);
 
       if (metricsRes.ok) {
@@ -322,8 +322,12 @@ export default function AdminDashboardPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to restock');
+      if (data.quota) {
+        setQuota(data.quota);
+        setRestockQuotaInput(data.quota.maxQuota || 5);
+      }
       setNotice({ type: 'success', message: data.message || 'تم تجديد الحصة وفتح دفعة جديدة بنجاح!' });
-      loadAllData();
+      await loadAllData();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to restock';
       setNotice({ type: 'error', message: msg });
@@ -343,8 +347,12 @@ export default function AdminDashboardPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update quota limit');
+      if (data.quota) {
+        setQuota(data.quota);
+        setRestockQuotaInput(data.quota.maxQuota || 5);
+      }
       setNotice({ type: 'success', message: data.message || 'تم تحديث سقف الحصة بنجاح!' });
-      loadAllData();
+      await loadAllData();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to update quota limit';
       setNotice({ type: 'error', message: msg });
