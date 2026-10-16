@@ -39,13 +39,24 @@
       "isSuspended": false,
       "createdAt": "2026-10-16T13:18:28.990Z",
       "updatedAt": "2026-10-16T13:18:28.990Z"
+    },
+    {
+      "id": "usr-28755244-710d-4232-a9ee-3472bb05c781",
+      "email": "customer_1792161564518@realmail.com",
+      "fullName": "عميل حقيقي جديد",
+      "phone": "01011223344",
+      "role": "customer",
+      "isSuspended": false,
+      "createdAt": "2026-10-16T14:39:24.962Z",
+      "updatedAt": "2026-10-16T14:39:24.962Z"
     }
   ],
   "passwords": {
     "admin-001": "04927142e0704c9d8c95bac993ca4c6adbe565de0a2e2590420e56d9285ad67d",
     "user-001": "5a5a735324dffe3f102f5c5d3d5fe8c9790483b45f68cf32532acbd006ffce3f",
     "usr-d7fd1a98-454b-4989-a5fb-c883f6d10a2b": "7b7eb2d34618a923119e927238f9609cbc29b5a054f40b5a70bba3069be79f03",
-    "usr-4545f381-1a64-4233-81ab-15066267a496": "7b7eb2d34618a923119e927238f9609cbc29b5a054f40b5a70bba3069be79f03"
+    "usr-4545f381-1a64-4233-81ab-15066267a496": "7b7eb2d34618a923119e927238f9609cbc29b5a054f40b5a70bba3069be79f03",
+    "usr-28755244-710d-4232-a9ee-3472bb05c781": "d0f3625c36342c9c95eec6a786295202a4f5df6225adb96f24b5714c93238699"
   },
   "products": [
     {
@@ -277,6 +288,23 @@
       "actualDispatchNotes": "تم إرسال دعوة التفعيل الرسمية عبر بريد Google.",
       "completedAt": "2026-10-16T13:18:29.093Z",
       "batchNumber": 1
+    },
+    {
+      "id": "GAP-20261016-8861",
+      "customerId": "usr-28755244-710d-4232-a9ee-3472bb05c781",
+      "customerName": "عميل حقيقي جديد",
+      "customerEmail": "customer_1792161564518@realmail.com",
+      "customerPhone": "01011223344",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodName": "",
+      "paymentStatus": "awaiting_payment",
+      "fulfillmentStatus": "pending",
+      "createdAt": "2026-10-16T14:39:25.014Z",
+      "updatedAt": "2026-10-16T14:39:25.014Z",
+      "batchNumber": 3
     }
   ],
   "paymentProofs": [
@@ -499,6 +527,17 @@
       "changedBy": "مدير النظام الرئيسي",
       "notes": "Action: reject_payment",
       "createdAt": "2026-10-16T14:04:13.727Z"
+    },
+    {
+      "id": "hist-2d027f3b-c6e0-4fd0-a036-758711d46a3b",
+      "orderId": "GAP-20261016-8861",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "awaiting_payment",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "customer",
+      "notes": "تم إنشاء الطلب بنجاح",
+      "createdAt": "2026-10-16T14:39:25.014Z"
     }
   ],
   "adminNotes": [
@@ -531,6 +570,18 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "audit-6fa74764-141b-45a2-93eb-41e7eac387c5",
+      "userEmail": "customer_1792161564518@realmail.com",
+      "action": "CREATE_ORDER",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-8861",
+      "details": {
+        "priceCents": 2500,
+        "currency": "EGP"
+      },
+      "createdAt": "2026-10-16T14:39:25.014Z"
+    },
     {
       "id": "audit-984fd62e-f50c-469d-91a7-6d2e96976cb3",
       "userId": "admin-001",
@@ -770,6 +821,18 @@
     }
   ],
   "emailNotifications": [
+    {
+      "id": "email-031bc69f-3b23-41cc-8a3a-2fb5b202a212",
+      "orderId": "GAP-20261016-8861",
+      "recipientEmail": "customer_1792161564518@realmail.com",
+      "templateType": "order_created",
+      "language": "ar",
+      "subject": "تم إنشاء طلبك بنجاح (GAP-20261016-8861) - متجر Google AI Pro مصر",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً عميل حقيقي جديد،</h2>\n          <p>شكراً لطلبك اشتراك <strong>Google AI Pro</strong>.</p>\n          <div style=\"background: #1e293b; padding: 16px; border-radius: 8px; margin: 20px 0; border: 1px solid #334155;\">\n            <p style=\"margin: 4px 0;\"><strong>رقم الطلب:</strong> <span style=\"color: #38bdf8;\">GAP-20261016-8861</span></p>\n            <p style=\"margin: 4px 0;\"><strong>المبلغ المستحق:</strong> 25.00 EGP</p>\n          </div>\n          <p><strong>الخطوة التالية:</strong> يرجى تحويل المبلغ المطلوب إلى إحدى وسائل الدفع المتاحة ثم رفع إثبات التحويل (سكرين شوت أو إيصال) من خلال صفحة تتبع الطلب.</p>\n          <p style=\"color: #94a3b8; font-size: 13px;\">هدف المعالجة التقديري هو 5 دقائق بعد التحقق من الدفع، رهن التوافر.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T14:39:25.021Z",
+      "createdAt": "2026-10-16T14:39:25.021Z"
+    },
     {
       "id": "email-f3f61e8a-af92-42be-8d63-0977b3bb85b9",
       "orderId": "GAP-20261016-1002",

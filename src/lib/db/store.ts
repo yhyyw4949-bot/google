@@ -56,20 +56,9 @@ const INITIAL_DATA: DatabaseData = {
       createdAt: '2026-10-01T10:00:00.000Z',
       updatedAt: '2026-10-01T10:00:00.000Z',
     },
-    {
-      id: 'user-001',
-      email: 'ahmed@example.com',
-      fullName: 'أحمد محمود',
-      phone: '+20 102 345 6789',
-      role: 'customer',
-      isSuspended: false,
-      createdAt: '2026-10-10T12:00:00.000Z',
-      updatedAt: '2026-10-10T12:00:00.000Z',
-    },
   ],
   passwords: {
     'admin-001': hashPassword('Admin@123456'),
-    'user-001': hashPassword('User@123456'),
   },
   products: [
     {

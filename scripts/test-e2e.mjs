@@ -97,6 +97,19 @@ async function runTests() {
     assert(loginRes.status === 200, 'Login returns 200 OK');
     assert(cookieHeader && cookieHeader.includes('gap_token'), 'Session cookie gap_token set with httpOnly');
 
+    console.log('\n--- Test 3b: Reject Unauthenticated Order Creation ---');
+    const guestOrderRes = await fetch(`${BASE_URL}/api/orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerName: 'مجهول',
+        customerEmail: 'anon@example.com',
+        confirmEmail: 'anon@example.com',
+        termsAccepted: true,
+      }),
+    });
+    assert(guestOrderRes.status === 401, 'Unauthenticated order creation rejected with 401');
+
     console.log('\n--- Test 4: Create Order (Server Price Locked) ---');
     const orderRes = await fetch(`${BASE_URL}/api/orders`, {
       method: 'POST',

@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sparkles, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/dashboard';
   const { language, t } = useLanguage();
   const { register } = useAuth();
   const ArrowIcon = language === 'ar' ? ArrowLeft : ArrowRight;
@@ -41,7 +43,7 @@ export default function RegisterPage() {
     setLoading(false);
 
     if (res.success) {
-      router.push('/dashboard');
+      router.push(redirectUrl);
     } else {
       setErrorMsg(res.error || 'Registration failed');
     }
@@ -144,7 +146,10 @@ export default function RegisterPage() {
 
           <div className="mt-6 pt-4 border-t border-white/5 text-center text-xs text-slate-400">
             <span>{language === 'ar' ? 'لديك حساب بالفعل؟' : 'Already have an account?'}</span>{' '}
-            <Link href="/login" className="text-indigo-400 font-semibold hover:text-indigo-300">
+            <Link
+              href={`/login${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}
+              className="text-indigo-400 font-semibold hover:text-indigo-300"
+            >
               {t('nav.login')}
             </Link>
           </div>
@@ -152,5 +157,13 @@ export default function RegisterPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-32 text-center text-slate-400 text-xs">Loading...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

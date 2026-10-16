@@ -15,12 +15,14 @@ import {
   ArrowLeft,
   Info,
   CreditCard,
+  UserPlus,
+  UserCheck,
 } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { language, t } = useLanguage();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const ArrowIcon = language === 'ar' ? ArrowLeft : ArrowRight;
 
   const [fullName, setFullName] = useState(user?.fullName || '');
@@ -84,6 +86,16 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+
+    if (!user) {
+      setErrorMsg(
+        language === 'ar'
+          ? 'يجب تسجيل الدخول أو إنشاء حساب أولاً لإتمام عملية الشراء ومتابعة الطلب.'
+          : 'Please sign in or create an account first to complete your purchase.'
+      );
+      router.push('/register?redirect=/checkout');
+      return;
+    }
 
     if (!fullName.trim() || !email.trim() || !confirmEmail.trim()) {
       setErrorMsg(language === 'ar' ? 'يرجى ملء جميع الحقول الإلزامية.' : 'Please fill all required fields.');
@@ -169,156 +181,239 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Form */}
-          <div className="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
-            <h2 className="text-lg font-bold text-white border-b border-white/5 pb-4">
-              {language === 'ar' ? 'بيانات المستلم والحساب' : 'Customer & Account Details'}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  {t('checkout.fullName')} <span className="text-rose-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder={language === 'ar' ? 'مثال: محمد أحمد علي' : 'e.g. Mohamed Ahmed'}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
-                />
+          {/* Auth Gate vs Form */}
+          {authLoading ? (
+            <div className="lg:col-span-7 glass-panel rounded-3xl p-12 text-center text-slate-400 text-sm space-y-3">
+              <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p>{language === 'ar' ? 'جاري التحقق من الجلسة...' : 'Verifying session...'}</p>
+            </div>
+          ) : !user ? (
+            <div className="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-10 border border-indigo-500/30 space-y-6 text-center shadow-2xl shadow-indigo-950/40">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400 shadow-lg shadow-indigo-500/20">
+                <Lock className="w-8 h-8" />
               </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  {t('checkout.email')} <span className="text-rose-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="yourname@gmail.com"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
-                />
-                <p className="text-[11px] text-slate-400 mt-1">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>{language === 'ar' ? 'خطوة إلزامية: تسجيل حساب مطلوب للطلب' : 'Mandatory: Account Registration Required'}</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                  {language === 'ar' ? 'سجل حسابك أولاً للبدء في طلب الاشتراك' : 'Register or Sign In to Purchase'}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
                   {language === 'ar'
-                    ? 'ستصلك دعوة التفعيل الرسمية على هذا البريد الإلكتروني.'
-                    : 'The official activation invitation will be dispatched to this email.'}
+                    ? 'لحماية اشتراكك، وتأكيد وصول دعوة تفعيل Google AI Pro لبريدك الشخصي المعتمد، ومتابعة إيصالات الدفع وحالة طلبك لحظة بلحظة، يجب أن تمتلك حساباً مسجلاً في متجرنا قبل إتمام الطلب.'
+                    : 'To protect your subscription, verify invitation dispatch to your official email, and track your payment receipt in real time, you must register or sign in before placing an order.'}
                 </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  {t('checkout.confirmEmail')} <span className="text-rose-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={confirmEmail}
-                  onChange={(e) => setConfirmEmail(e.target.value)}
-                  placeholder="yourname@gmail.com"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
-                />
+              <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                <Link
+                  href="/register?redirect=/checkout"
+                  className="glow-btn px-6 py-3.5 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 flex-1 cursor-pointer"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>{language === 'ar' ? 'إنشاء حساب جديد (تسجيل)' : 'Register New Account'}</span>
+                </Link>
+                <Link
+                  href="/login?redirect=/checkout"
+                  className="px-6 py-3.5 rounded-xl glass-card text-slate-200 hover:text-white border border-slate-700 font-semibold text-sm flex items-center justify-center gap-2 hover:border-slate-500 transition-colors flex-1"
+                >
+                  <span>{language === 'ar' ? 'تسجيل الدخول' : 'Sign In'}</span>
+                </Link>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  {t('checkout.phone')}
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="01012345678"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
-                />
-                <p className="text-[11px] text-slate-400 mt-1">
-                  {language === 'ar' ? 'اختياري للتواصل السريع عبر واتساب في حال الحاجة.' : 'Optional for WhatsApp updates.'}
+              <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-400 text-xs text-start space-y-2">
+                <div className="flex items-center gap-2 text-slate-200 font-semibold">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>{language === 'ar' ? 'لماذا يشترط تسجيل الحساب للطلب؟' : 'Why is an account required to order?'}</span>
+                </div>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{language === 'ar' ? 'ربط دعوة تفعيل Google AI Pro ببريدك الشخصي المسجل بدقة' : 'Securely link the Google AI Pro invitation to your verified email'}</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{language === 'ar' ? 'لوحة تحكم خاصة بك لمتابعة حالة المراجعة وإرسال الدعوة وتحميل الإيصالات' : 'Dedicated customer dashboard to track review status and dispatch'}</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{language === 'ar' ? 'حماية بياناتك وحسابك من أي وصول غير مصرح به' : 'Full security and protection for your orders and personal data'}</span>
                 </p>
               </div>
-
-              {/* Strict Security Disclosure */}
-              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-200 text-xs flex items-start gap-2.5">
-                <Lock className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <p className="leading-relaxed">{t('checkout.securityNote')}</p>
+            </div>
+          ) : (
+            /* Form */
+            <div className="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
+              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                <h2 className="text-lg font-bold text-white">
+                  {language === 'ar' ? 'بيانات المستلم والطلب' : 'Customer & Order Details'}
+                </h2>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span>{language === 'ar' ? 'حساب مسجل وموثق' : 'Verified Account'}</span>
+                </div>
               </div>
 
-              {/* Terms Checkbox */}
-              <div className="pt-2">
-                <label className="flex items-start gap-3 cursor-pointer">
+              {/* Logged in badge */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs">
+                <div className="flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                  <span className="text-slate-300">
+                    {language === 'ar' ? 'مسجل باسم:' : 'Ordering as:'}{' '}
+                    <strong className="text-white">{user.fullName}</strong> ({user.email})
+                  </span>
+                </div>
+                <Link href="/dashboard" className="text-indigo-400 hover:text-indigo-300 font-semibold">
+                  {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
+                </Link>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    {t('checkout.fullName')} <span className="text-rose-400">*</span>
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500"
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder={language === 'ar' ? 'مثال: محمد أحمد علي' : 'e.g. Mohamed Ahmed'}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
                   />
-                  <span className="text-xs text-slate-300 leading-relaxed">
-                    {language === 'ar' ? (
-                      <>
-                        أوافق على{' '}
-                        <Link href="/terms" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          الشروط والأحكام
-                        </Link>
-                        ، و
-                        <Link href="/privacy" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          سياسة الخصوصية
-                        </Link>
-                        ، و
-                        <Link href="/refund" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          سياسة الاسترجاع
-                        </Link>
-                        ، وأفهم أن هذه خدمة وسيطة مستقلة.
-                      </>
-                    ) : (
-                      <>
-                        I agree to the{' '}
-                        <Link href="/terms" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          Terms of Service
-                        </Link>
-                        ,{' '}
-                        <Link href="/privacy" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          Privacy Policy
-                        </Link>
-                        , and{' '}
-                        <Link href="/refund" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
-                          Refund Policy
-                        </Link>
-                        , and acknowledge this is an independent service.
-                      </>
-                    )}
-                  </span>
-                </label>
-              </div>
+                </div>
 
-              {/* Submit CTA */}
-              <button
-                type="submit"
-                disabled={loading || productData.isSoldOut}
-                className={`w-full py-4 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all ${
-                  productData.isSoldOut
-                    ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
-                    : 'glow-btn text-white shadow-indigo-500/20 cursor-pointer disabled:opacity-60'
-                }`}
-              >
-                {loading ? (
-                  <span>{t('checkout.creating')}</span>
-                ) : productData.isSoldOut ? (
-                  <span>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    {t('checkout.email')} <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="yourname@gmail.com"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
                     {language === 'ar'
-                      ? 'نفدت الكمية الحالية بالكامل (5/5 طلبات)'
-                      : 'Out of Stock (Batch Quota 5/5 Reached)'}
-                  </span>
-                ) : (
-                  <>
-                    <span>{t('checkout.submit')}</span>
-                    <ArrowIcon className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
+                      ? 'ستصلك دعوة التفعيل الرسمية على هذا البريد الإلكتروني.'
+                      : 'The official activation invitation will be dispatched to this email.'}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    {t('checkout.confirmEmail')} <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={confirmEmail}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    placeholder="yourname@gmail.com"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    {t('checkout.phone')}
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="01012345678"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    {language === 'ar' ? 'اختياري للتواصل السريع عبر واتساب في حال الحاجة.' : 'Optional for WhatsApp updates.'}
+                  </p>
+                </div>
+
+                {/* Strict Security Disclosure */}
+                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-200 text-xs flex items-start gap-2.5">
+                  <Lock className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <p className="leading-relaxed">{t('checkout.securityNote')}</p>
+                </div>
+
+                {/* Terms Checkbox */}
+                <div className="pt-2">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="mt-1 w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500"
+                    />
+                    <span className="text-xs text-slate-300 leading-relaxed">
+                      {language === 'ar' ? (
+                        <>
+                          أوافق على{' '}
+                          <Link href="/terms" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            الشروط والأحكام
+                          </Link>
+                          ، و
+                          <Link href="/privacy" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            سياسة الخصوصية
+                          </Link>
+                          ، و
+                          <Link href="/refund" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            سياسة الاسترجاع
+                          </Link>
+                          ، وأفهم أن هذه خدمة وسيطة مستقلة.
+                        </>
+                      ) : (
+                        <>
+                          I agree to the{' '}
+                          <Link href="/terms" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            Terms of Service
+                          </Link>
+                          ,{' '}
+                          <Link href="/privacy" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            Privacy Policy
+                          </Link>
+                          , and{' '}
+                          <Link href="/refund" target="_blank" className="text-indigo-400 underline hover:text-indigo-300">
+                            Refund Policy
+                          </Link>
+                          , and acknowledge this is an independent service.
+                        </>
+                      )}
+                    </span>
+                  </label>
+                </div>
+
+                {/* Submit CTA */}
+                <button
+                  type="submit"
+                  disabled={loading || productData.isSoldOut}
+                  className={`w-full py-4 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all ${
+                    productData.isSoldOut
+                      ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                      : 'glow-btn text-white shadow-indigo-500/20 cursor-pointer disabled:opacity-60'
+                  }`}
+                >
+                  {loading ? (
+                    <span>{t('checkout.creating')}</span>
+                  ) : productData.isSoldOut ? (
+                    <span>
+                      {language === 'ar'
+                        ? 'نفدت الكمية الحالية بالكامل (5/5 طلبات)'
+                        : 'Out of Stock (Batch Quota 5/5 Reached)'}
+                    </span>
+                  ) : (
+                    <>
+                      <span>{t('checkout.submit')}</span>
+                      <ArrowIcon className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
 
           {/* Live Order Summary Column */}
           <div className="lg:col-span-5 space-y-6">

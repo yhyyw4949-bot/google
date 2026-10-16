@@ -29,7 +29,7 @@ function LoginForm() {
     setLoading(false);
 
     if (res.success) {
-      if (email.toLowerCase().includes('admin')) {
+      if (res.user?.role === 'admin') {
         router.push('/admin');
       } else {
         router.push(redirectUrl);
@@ -37,16 +37,6 @@ function LoginForm() {
     } else {
       setErrorMsg(res.error || 'Login failed');
     }
-  };
-
-  const handleDemoAdmin = () => {
-    setEmail('admin@googleaipro.eg');
-    setPassword('Admin@123456');
-  };
-
-  const handleDemoUser = () => {
-    setEmail('ahmed@example.com');
-    setPassword('User@123456');
   };
 
   return (
@@ -64,29 +54,6 @@ function LoginForm() {
         <p className="text-xs text-slate-400">
           {language === 'ar' ? 'سجل دخولك لمتابعة طلباتك أو إدارة المتجر' : 'Sign in to access your orders or dashboard'}
         </p>
-      </div>
-
-      {/* Demo Quick-Fill Buttons */}
-      <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
-        <span className="text-[11px] text-slate-400 block font-medium">
-          {language === 'ar' ? 'تسجيل دخول سريع للتجربة:' : 'Quick Demo Logins:'}
-        </span>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={handleDemoAdmin}
-            className="py-1.5 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold hover:bg-amber-500/20 transition-colors"
-          >
-            {language === 'ar' ? 'حساب المدير (Admin)' : 'Admin Demo'}
-          </button>
-          <button
-            type="button"
-            onClick={handleDemoUser}
-            className="py-1.5 px-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold hover:bg-indigo-500/20 transition-colors"
-          >
-            {language === 'ar' ? 'حساب عميل (Customer)' : 'Customer Demo'}
-          </button>
-        </div>
       </div>
 
       {/* Error message */}
@@ -144,7 +111,10 @@ function LoginForm() {
 
         <div className="mt-6 pt-4 border-t border-white/5 text-center text-xs text-slate-400">
           <span>{language === 'ar' ? 'ليس لديك حساب بعد؟' : "Don't have an account?"}</span>{' '}
-          <Link href="/register" className="text-indigo-400 font-semibold hover:text-indigo-300">
+          <Link
+            href={`/register${redirectUrl !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}
+            className="text-indigo-400 font-semibold hover:text-indigo-300"
+          >
             {t('nav.register')}
           </Link>
         </div>

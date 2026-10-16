@@ -19,6 +19,18 @@ export async function POST(req: Request) {
       language = 'ar',
     } = body;
 
+    if (!user) {
+      return NextResponse.json(
+        {
+          error:
+            language === 'ar'
+              ? 'يجب تسجيل الدخول أو إنشاء حساب أولاً لإتمام عملية الشراء ومتابعة الطلب.'
+              : 'Please sign in or create an account first to place an order.',
+        },
+        { status: 401 }
+      );
+    }
+
     // 1. Validation
     if (!customerName || !customerEmail || !confirmEmail) {
       return NextResponse.json({ error: 'Please fill in all required fields.' }, { status: 400 });
