@@ -85,6 +85,7 @@ export interface PaymentProof {
   originalFilename: string;
   mimeType: string;
   fileSizeBytes: number;
+  base64Data?: string;
   transactionReference?: string;
   reviewStatus: 'pending' | 'approved' | 'rejected' | 'superseded';
   reviewerId?: string;

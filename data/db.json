@@ -300,10 +300,10 @@
       "priceCents": 2500,
       "currency": "EGP",
       "paymentMethodName": "",
-      "paymentStatus": "awaiting_payment",
+      "paymentStatus": "receipt_submitted",
       "fulfillmentStatus": "pending",
       "createdAt": "2026-10-16T14:39:25.014Z",
-      "updatedAt": "2026-10-16T14:39:25.014Z",
+      "updatedAt": "2026-10-16T14:56:48.302Z",
       "batchNumber": 3
     }
   ],
@@ -360,6 +360,40 @@
       "createdAt": "2026-10-16T13:18:29.039Z",
       "reviewerId": "admin-001",
       "reviewTimestamp": "2026-10-16T13:18:29.075Z"
+    },
+    {
+      "id": "proof-a3203cf2-eaa3-4aad-91b1-fcd0dd7d1488",
+      "orderId": "GAP-20261016-8861",
+      "filePath": "d81473e2-5ef3-4c2b-992b-bb5a0fea8f42.png",
+      "originalFilename": "receipt.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 67,
+      "reviewStatus": "superseded",
+      "createdAt": "2026-10-16T14:49:17.606Z"
+    },
+    {
+      "id": "proof-16a313d1-a46e-459d-b964-129c1cd15a8e",
+      "orderId": "GAP-20261016-8861",
+      "filePath": "b42e90f5-7566-4685-957d-75e000894453.jpg",
+      "originalFilename": "vodafone_transfer.jpg",
+      "mimeType": "image/jpeg",
+      "fileSizeBytes": 22,
+      "base64Data": "/9j/4AAQSkZJRgABAQEAYABgAAD/2Q==",
+      "transactionReference": "TXN-VODA-12345",
+      "reviewStatus": "superseded",
+      "createdAt": "2026-10-16T14:56:32.670Z"
+    },
+    {
+      "id": "proof-ca331fb8-d348-4f39-a6cd-888d5e170d27",
+      "orderId": "GAP-20261016-8861",
+      "filePath": "fd93b8ad-f9de-41a5-83d9-165fb2b79f1e.heic",
+      "originalFilename": "iphone_instapay.heic",
+      "mimeType": "image/heic",
+      "fileSizeBytes": 16,
+      "base64Data": "AAAAGGZ0eXBoZWljAAAAAA==",
+      "transactionReference": "INSTA-IPHONE-7788",
+      "reviewStatus": "pending",
+      "createdAt": "2026-10-16T14:56:48.301Z"
     }
   ],
   "orderStatusHistory": [
@@ -538,6 +572,39 @@
       "changedBy": "customer",
       "notes": "تم إنشاء الطلب بنجاح",
       "createdAt": "2026-10-16T14:39:25.014Z"
+    },
+    {
+      "id": "hist-f64dc402-14b6-4686-ab66-a9535660c594",
+      "orderId": "GAP-20261016-8861",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "عميل حقيقي جديد",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T14:49:17.606Z"
+    },
+    {
+      "id": "hist-e3823168-cafa-4122-a8cb-318bb6cc0034",
+      "orderId": "GAP-20261016-8861",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "عميل حقيقي جديد",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T14:56:32.670Z"
+    },
+    {
+      "id": "hist-96e42562-b22b-48e5-813d-6a7aa25013e5",
+      "orderId": "GAP-20261016-8861",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "عميل حقيقي جديد",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T14:56:48.301Z"
     }
   ],
   "adminNotes": [
@@ -570,6 +637,48 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "audit-4a2a44be-3860-4d5a-b1a1-7ddc84e77e33",
+      "userEmail": "customer_1792161564518@realmail.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-ca331fb8-d348-4f39-a6cd-888d5e170d27",
+      "details": {
+        "orderId": "GAP-20261016-8861",
+        "fileSize": 16,
+        "mimeType": "image/heic",
+        "txRef": "INSTA-IPHONE-7788"
+      },
+      "createdAt": "2026-10-16T14:56:48.301Z"
+    },
+    {
+      "id": "audit-c3a31764-1c5b-440b-af66-a5a360b140a9",
+      "userEmail": "customer_1792161564518@realmail.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-16a313d1-a46e-459d-b964-129c1cd15a8e",
+      "details": {
+        "orderId": "GAP-20261016-8861",
+        "fileSize": 22,
+        "mimeType": "image/jpeg",
+        "txRef": "TXN-VODA-12345"
+      },
+      "createdAt": "2026-10-16T14:56:32.670Z"
+    },
+    {
+      "id": "audit-1d91a69f-3843-460f-816b-6bade67b9a84",
+      "userEmail": "customer_1792161564518@realmail.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-a3203cf2-eaa3-4aad-91b1-fcd0dd7d1488",
+      "details": {
+        "orderId": "GAP-20261016-8861",
+        "fileSize": 67,
+        "mimeType": "image/png",
+        "txRef": null
+      },
+      "createdAt": "2026-10-16T14:49:17.606Z"
+    },
     {
       "id": "audit-6fa74764-141b-45a2-93eb-41e7eac387c5",
       "userEmail": "customer_1792161564518@realmail.com",
@@ -821,6 +930,42 @@
     }
   ],
   "emailNotifications": [
+    {
+      "id": "email-3d67d867-43c8-41ba-a4e7-78af815274e9",
+      "orderId": "GAP-20261016-8861",
+      "recipientEmail": "customer_1792161564518@realmail.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-8861)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً عميل حقيقي جديد،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-8861</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T14:56:48.306Z",
+      "createdAt": "2026-10-16T14:56:48.306Z"
+    },
+    {
+      "id": "email-10eccfd9-a2b5-474d-98dd-80bdb43e28f2",
+      "orderId": "GAP-20261016-8861",
+      "recipientEmail": "customer_1792161564518@realmail.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-8861)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً عميل حقيقي جديد،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-8861</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T14:56:32.674Z",
+      "createdAt": "2026-10-16T14:56:32.674Z"
+    },
+    {
+      "id": "email-b34d7b45-6a2a-4b77-8b37-43c2dc5f77c0",
+      "orderId": "GAP-20261016-8861",
+      "recipientEmail": "customer_1792161564518@realmail.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-8861)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً عميل حقيقي جديد،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-8861</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T14:49:17.611Z",
+      "createdAt": "2026-10-16T14:49:17.611Z"
+    },
     {
       "id": "email-031bc69f-3b23-41cc-8a3a-2fb5b202a212",
       "orderId": "GAP-20261016-8861",

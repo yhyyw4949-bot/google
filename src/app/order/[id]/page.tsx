@@ -87,8 +87,8 @@ function OrderPaymentContent({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        setErrorMsg(language === 'ar' ? 'الحد الأقصى لحجم الملف هو 5 ميجابايت.' : 'File size cannot exceed 5MB.');
+      if (file.size > 15 * 1024 * 1024) {
+        setErrorMsg(language === 'ar' ? 'الحد الأقصى لحجم الملف هو 15 ميجابايت.' : 'File size cannot exceed 15MB.');
         return;
       }
       setSelectedFile(file);
@@ -120,10 +120,15 @@ function OrderPaymentContent({
         body: formData,
       });
 
-      const data = await res.json();
+      let data: Record<string, any> = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = { error: res.statusText || 'Upload failed' };
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to upload receipt');
+        throw new Error(data.error || (language === 'ar' ? 'تعذر رفع الإيصال. يرجى المحاولة مرة أخرى أو التأكد من نوع الملف.' : 'Failed to upload receipt'));
       }
 
       setSuccessMsg(t('payment.proofUploaded'));
@@ -495,7 +500,7 @@ function OrderPaymentContent({
                   <div className="relative border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-6 text-center transition-colors bg-slate-900/40">
                     <input
                       type="file"
-                      accept=".jpg,.jpeg,.png,.webp,.pdf"
+                      accept="image/*,.pdf,.heic,.heif"
                       onChange={handleFileChange}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />

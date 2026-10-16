@@ -38,6 +38,18 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized to view this receipt' }, { status: 403 });
     }
 
+    // If stored as base64, serve directly
+    if (proof.base64Data) {
+      const fileBuffer = Buffer.from(proof.base64Data, 'base64');
+      return new NextResponse(fileBuffer, {
+        headers: {
+          'Content-Type': proof.mimeType || 'application/octet-stream',
+          'Content-Disposition': `inline; filename="${proof.originalFilename}"`,
+          'Cache-Control': 'private, max-age=3600',
+        },
+      });
+    }
+
     // Check if file exists on disk
     const filePath = path.join(RECEIPTS_DIR, proof.filePath);
     if (!fs.existsSync(filePath)) {
