@@ -384,12 +384,18 @@ export default function AdminDashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product),
       });
+      const data = await res.json();
       if (res.ok) {
-        setNotice({ type: 'success', message: 'Product settings updated successfully' });
+        if (data.product) {
+          setProduct(data.product);
+        }
+        setNotice({ type: 'success', message: 'تم حفظ وتحديث إعدادات المنتج والأسعار بنجاح!' });
         loadAllData();
+      } else {
+        setNotice({ type: 'error', message: data.error || 'فشل تحديث إعدادات المنتج' });
       }
     } catch {
-      setNotice({ type: 'error', message: 'Failed to update product settings' });
+      setNotice({ type: 'error', message: 'تعذر الاتصال بالخادم لحفظ إعدادات المنتج' });
     }
   };
 
@@ -412,12 +418,18 @@ export default function AdminDashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(siteSettings),
       });
+      const data = await res.json();
       if (res.ok) {
-        setNotice({ type: 'success', message: 'Site settings updated successfully' });
+        if (data.settings) {
+          setSiteSettings(data.settings);
+        }
+        setNotice({ type: 'success', message: 'تم حفظ وتحديث إعدادات وهوية الموقع بنجاح!' });
         loadAllData();
+      } else {
+        setNotice({ type: 'error', message: data.error || 'فشل تحديث إعدادات الموقع' });
       }
     } catch {
-      setNotice({ type: 'error', message: 'Failed to update settings' });
+      setNotice({ type: 'error', message: 'تعذر الاتصال بالخادم لحفظ إعدادات الموقع' });
     }
   };
 
@@ -1488,11 +1500,11 @@ export default function AdminDashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    اسم المتجر بالعربية
+                    اسم المتجر بالعربية (يظهر في الهيدر والفوتر)
                   </label>
                   <input
                     type="text"
-                    value={siteSettings.brandNameAr}
+                    value={siteSettings.brandNameAr || ''}
                     onChange={(e) => setSiteSettings({ ...siteSettings, brandNameAr: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
                   />
@@ -1500,27 +1512,81 @@ export default function AdminDashboardPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    بريد الدعم الفني
+                    اسم المتجر بالإنجليزية (Brand Name EN)
                   </label>
                   <input
-                    type="email"
-                    value={siteSettings.contactEmail}
-                    onChange={(e) => setSiteSettings({ ...siteSettings, contactEmail: e.target.value })}
+                    type="text"
+                    value={siteSettings.brandNameEn || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, brandNameEn: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  نص شريط الإعلانات في الصفحة الرئيسية
-                </label>
-                <input
-                  type="text"
-                  value={siteSettings.announcementAr}
-                  onChange={(e) => setSiteSettings({ ...siteSettings, announcementAr: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    بريد الدعم الفني الرسمي
+                  </label>
+                  <input
+                    type="email"
+                    value={siteSettings.contactEmail || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, contactEmail: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    رقم هاتف الدعم والمكالمات
+                  </label>
+                  <input
+                    type="text"
+                    value={siteSettings.supportPhone || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, supportPhone: e.target.value })}
+                    placeholder="+20 100 000 0001"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    رقم واتساب المعتمد
+                  </label>
+                  <input
+                    type="text"
+                    value={siteSettings.whatsappNumber || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, whatsappNumber: e.target.value })}
+                    placeholder="+20 100 000 0001"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    نص شريط الإعلانات بالعربية
+                  </label>
+                  <input
+                    type="text"
+                    value={siteSettings.announcementAr || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, announcementAr: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    نص شريط الإعلانات بالإنجليزية (Announcement EN)
+                  </label>
+                  <input
+                    type="text"
+                    value={siteSettings.announcementEn || ''}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, announcementEn: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs"
+                  />
+                </div>
               </div>
 
               <div className="flex items-center gap-3 pt-2">

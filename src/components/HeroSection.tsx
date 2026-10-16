@@ -31,12 +31,46 @@ export default function HeroSection() {
     isSoldOut: false,
   });
 
+  const [product, setProduct] = useState<{
+    titleAr?: string;
+    titleEn?: string;
+    descAr?: string;
+    descEn?: string;
+    priceCents: number;
+    currency: string;
+    durationAr?: string;
+    durationEn?: string;
+    deliveryTargetMins?: number;
+    disclaimerAr?: string;
+    disclaimerEn?: string;
+  }>({
+    titleAr: 'Google AI Pro',
+    titleEn: 'Google AI Pro',
+    priceCents: 2500,
+    currency: 'EGP',
+    deliveryTargetMins: 5,
+  });
+
+  const [brandName, setBrandName] = useState({
+    ar: 'Google AI Pro',
+    en: 'Google AI Pro',
+  });
+
   useEffect(() => {
     fetch('/api/public/config', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.quota) {
           setQuota(data.quota);
+        }
+        if (data.product) {
+          setProduct(data.product);
+        }
+        if (data.settings) {
+          setBrandName({
+            ar: data.settings.brandNameAr || 'Google AI Pro',
+            en: data.settings.brandNameEn || 'Google AI Pro',
+          });
         }
       })
       .catch(() => {});
@@ -103,12 +137,12 @@ export default function HeroSection() {
               {language === 'ar' ? (
                 <>
                   افتح عالم الذكاء الاصطناعي مع{' '}
-                  <span className="text-gradient-purple">Google AI Pro</span>
+                  <span className="text-gradient-purple">{brandName.ar}</span>
                 </>
               ) : (
                 <>
                   Unlock the World of AI with{' '}
-                  <span className="text-gradient-purple">Google AI Pro</span>
+                  <span className="text-gradient-purple">{brandName.en}</span>
                 </>
               )}
             </h1>
@@ -121,7 +155,11 @@ export default function HeroSection() {
             {/* Delivery Target Notice Badge */}
             <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-200 text-xs sm:text-sm">
               <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <span>{t('hero.deliveryTarget')}</span>
+              <span>
+                {language === 'ar'
+                  ? `الهدف الزمني للمعالجة: ${product.deliveryTargetMins || 5} دقائق بعد تأكيد التحويل`
+                  : `Target processing time: ${product.deliveryTargetMins || 5} minutes after verification`}
+              </span>
             </div>
 
             {/* Feature Highlights List */}
@@ -178,7 +216,11 @@ export default function HeroSection() {
             {/* Independent Third Party Disclosure */}
             <div className="pt-2 flex items-start gap-2 text-[11px] sm:text-xs text-slate-400 max-w-xl">
               <ShieldAlert className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
-              <p className="leading-relaxed">{t('hero.disclaimer')}</p>
+              <p className="leading-relaxed">
+                {language === 'ar'
+                  ? (product.disclaimerAr || t('hero.disclaimer'))
+                  : (product.disclaimerEn || t('hero.disclaimer'))}
+              </p>
             </div>
           </div>
 
@@ -206,15 +248,19 @@ export default function HeroSection() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg text-white">Google AI Pro</h3>
+                      <h3 className="font-bold text-lg text-white">
+                        {language === 'ar' ? (product.titleAr || brandName.ar) : (product.titleEn || brandName.en)}
+                      </h3>
                       <p className="text-xs text-indigo-300">
-                        {language === 'ar' ? 'دعوة تفعيل الاشتراك' : 'Subscription Invitation'}
+                        {language === 'ar'
+                          ? (product.durationAr || 'دعوة تفعيل للاشتراك')
+                          : (product.durationEn || 'Subscription Invitation')}
                       </p>
                     </div>
                   </div>
                   {quota.isSoldOut ? (
                     <span className="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-bold">
-                      {language === 'ar' ? 'نفدت الكمية (5/5)' : 'Sold Out'}
+                      {language === 'ar' ? `نفدت الكمية (${quota.maxQuota}/${quota.maxQuota})` : `Sold Out (${quota.maxQuota}/${quota.maxQuota})`}
                     </span>
                   ) : (
                     <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
@@ -250,9 +296,11 @@ export default function HeroSection() {
                 {/* Price Display */}
                 <div className="py-5 border-b border-white/10">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-white tracking-tight">25</span>
+                    <span className="text-5xl font-black text-white tracking-tight">
+                      {Math.round(product.priceCents / 100)}
+                    </span>
                     <span className="text-xl font-bold text-indigo-300">
-                      {language === 'ar' ? 'جنيه مصري' : 'EGP'}
+                      {language === 'ar' ? 'جنيه مصري' : (product.currency || 'EGP')}
                     </span>
                     <span className="text-xs text-slate-400">
                       {language === 'ar' ? '/ للطلب' : '/ order'}
@@ -280,7 +328,9 @@ export default function HeroSection() {
                       {language === 'ar' ? 'الهدف الزمني:' : 'Target Timeframe:'}
                     </span>
                     <span className="font-medium text-cyan-300">
-                      {language === 'ar' ? '5 دقائق بعد التحقق' : '5 mins after verification'}
+                      {language === 'ar'
+                        ? `${product.deliveryTargetMins || 5} دقائق بعد التحقق`
+                        : `${product.deliveryTargetMins || 5} mins after verification`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-300">
@@ -300,7 +350,11 @@ export default function HeroSection() {
                     className="w-full py-3.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-sm flex items-center justify-center gap-2 border border-slate-700 cursor-not-allowed"
                   >
                     <AlertOctagon className="w-4 h-4 text-rose-500" />
-                    <span>{language === 'ar' ? 'نفدت الكمية (5/5)' : 'Out of Stock (5/5)'}</span>
+                    <span>
+                      {language === 'ar'
+                        ? `نفدت الكمية (${quota.maxQuota}/${quota.maxQuota})`
+                        : `Out of Stock (${quota.maxQuota}/${quota.maxQuota})`}
+                    </span>
                   </button>
                 ) : (
                   <Link

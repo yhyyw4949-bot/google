@@ -1,12 +1,21 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import crypto from 'crypto';
 import { db } from '@/lib/db/store';
 import { getCurrentUser } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(req: Request) {
+  await headers();
   try {
     const product = db.getProduct();
-    return NextResponse.json({ product });
+    return NextResponse.json(
+      { product },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        },
+      }
+    );
   } catch (error) {
     console.error('Admin product get error:', error);
     return NextResponse.json({ error: 'Failed to retrieve product config' }, { status: 500 });

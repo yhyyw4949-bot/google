@@ -11,6 +11,25 @@ export default function Navbar() {
   const { user, isAdmin, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [brandName, setBrandName] = useState({ ar: 'Google AI Pro', en: 'Google AI Pro' });
+  const [priceEGP, setPriceEGP] = useState<number>(25);
+
+  useEffect(() => {
+    fetch('/api/public/config', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) {
+          setBrandName({
+            ar: data.settings.brandNameAr || 'Google AI Pro',
+            en: data.settings.brandNameEn || 'Google AI Pro',
+          });
+        }
+        if (data.product?.priceCents) {
+          setPriceEGP(Math.round(data.product.priceCents / 100));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +62,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">
-                Google AI Pro
+                {language === 'ar' ? brandName.ar : brandName.en}
               </span>
               <span className="text-[10px] text-indigo-400/80 uppercase tracking-widest font-mono">
                 {language === 'ar' ? 'متجر الاشتراكات المستقل' : 'Independent Store'}
@@ -239,7 +258,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="glow-btn text-center py-2.5 rounded-xl text-white text-sm font-semibold mt-2"
               >
-                {t('nav.orderNow')} (25 EGP)
+                {t('nav.orderNow')} ({priceEGP} EGP)
               </Link>
             </div>
           </div>

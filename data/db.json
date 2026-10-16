@@ -141,7 +141,7 @@
           "order": 6
         }
       ],
-      "updatedAt": "2026-10-16T14:25:53.090Z",
+      "updatedAt": "2026-10-16T15:18:06.319Z",
       "maxQuota": 5,
       "batchNumber": 3,
       "batchResetTimestamp": "2026-10-16T14:25:47.194Z"
@@ -303,7 +303,7 @@
       "paymentStatus": "receipt_submitted",
       "fulfillmentStatus": "pending",
       "createdAt": "2026-10-16T14:39:25.014Z",
-      "updatedAt": "2026-10-16T14:56:48.302Z",
+      "updatedAt": "2026-10-16T15:00:59.879Z",
       "batchNumber": 3
     }
   ],
@@ -392,8 +392,19 @@
       "fileSizeBytes": 16,
       "base64Data": "AAAAGGZ0eXBoZWljAAAAAA==",
       "transactionReference": "INSTA-IPHONE-7788",
-      "reviewStatus": "pending",
+      "reviewStatus": "superseded",
       "createdAt": "2026-10-16T14:56:48.301Z"
+    },
+    {
+      "id": "proof-23a83416-c8c9-4612-87a8-128bfdce5491",
+      "orderId": "GAP-20261016-8861",
+      "filePath": "9268476c-945e-4fd7-8b7f-4fbb0ebff0ec.png",
+      "originalFilename": "receipt_final.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 67,
+      "base64Data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+      "reviewStatus": "pending",
+      "createdAt": "2026-10-16T15:00:59.878Z"
     }
   ],
   "orderStatusHistory": [
@@ -605,6 +616,17 @@
       "changedBy": "عميل حقيقي جديد",
       "notes": "تم رفع إثبات الدفع للمراجعة",
       "createdAt": "2026-10-16T14:56:48.301Z"
+    },
+    {
+      "id": "hist-1a240e7c-da81-4c5f-aa48-bfc498d66ddd",
+      "orderId": "GAP-20261016-8861",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "عميل حقيقي جديد",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T15:00:59.878Z"
     }
   ],
   "adminNotes": [
@@ -637,6 +659,83 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "audit-78755683-e02f-4e12-887d-1599d93f6df0",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "UPDATE_PRODUCT_SETTINGS",
+      "resourceType": "products",
+      "resourceId": "google-ai-pro-invite",
+      "details": {
+        "priceCents": 2500,
+        "deliveryTargetMins": 5
+      },
+      "createdAt": "2026-10-16T15:18:06.320Z"
+    },
+    {
+      "id": "audit-fa9931e8-d89e-402c-b1e4-7bba9128b3c2",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "UPDATE_PRODUCT_SETTINGS",
+      "resourceType": "products",
+      "resourceId": "google-ai-pro-invite",
+      "details": {
+        "priceCents": 3000,
+        "deliveryTargetMins": 3
+      },
+      "createdAt": "2026-10-16T15:18:06.217Z"
+    },
+    {
+      "id": "audit-3995c2ec-65ba-49f3-958e-4ed787414206",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "UPDATE_SITE_SETTINGS",
+      "resourceType": "site_settings",
+      "resourceId": "main",
+      "details": {
+        "brandNameAr": "متجر الذكاء الاصطناعي برو الرسمي",
+        "announcementAr": "عرض اليوم: استلم دعوتك خلال 5 دقائق فقط!",
+        "isAnnouncementActive": true
+      },
+      "createdAt": "2026-10-16T15:17:56.644Z"
+    },
+    {
+      "id": "audit-cb668224-7e60-4a61-800e-2aaf027f9091",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "UPDATE_SITE_SETTINGS",
+      "resourceType": "site_settings",
+      "resourceId": "main",
+      "details": {
+        "id": "main",
+        "brandNameAr": "متجر الذكاء الاصطناعي برو التجريبي",
+        "brandNameEn": "Google AI Pro Egypt Store",
+        "logoUrl": "/logo.png",
+        "contactEmail": "support@googleaipro.eg",
+        "supportPhone": "+20 100 000 0001",
+        "whatsappNumber": "+20 100 000 0001",
+        "announcementAr": "⚡ سرعة المعالجة المقدرة 5 دقائق بعد تأكيد الدفع عبر فودافون كاش وإنستاباي!",
+        "announcementEn": "⚡ Target processing time: 5 minutes after payment verification via Mobile Cash & InstaPay!",
+        "isAnnouncementActive": true,
+        "maintenanceMode": false,
+        "updatedAt": "2026-10-16T12:00:00.000Z"
+      },
+      "createdAt": "2026-10-16T15:04:25.726Z"
+    },
+    {
+      "id": "audit-313a438a-1daa-4802-a2b7-f644c8793b85",
+      "userEmail": "customer_1792161564518@realmail.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-23a83416-c8c9-4612-87a8-128bfdce5491",
+      "details": {
+        "orderId": "GAP-20261016-8861",
+        "fileSize": 67,
+        "mimeType": "image/png",
+        "txRef": null
+      },
+      "createdAt": "2026-10-16T15:00:59.878Z"
+    },
     {
       "id": "audit-4a2a44be-3860-4d5a-b1a1-7ddc84e77e33",
       "userEmail": "customer_1792161564518@realmail.com",
@@ -931,6 +1030,18 @@
   ],
   "emailNotifications": [
     {
+      "id": "email-26e9b199-01ea-4d6e-8b90-68195573b8a3",
+      "orderId": "GAP-20261016-8861",
+      "recipientEmail": "customer_1792161564518@realmail.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-8861)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً عميل حقيقي جديد،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-8861</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T15:00:59.882Z",
+      "createdAt": "2026-10-16T15:00:59.882Z"
+    },
+    {
       "id": "email-3d67d867-43c8-41ba-a4e7-78af815274e9",
       "orderId": "GAP-20261016-8861",
       "recipientEmail": "customer_1792161564518@realmail.com",
@@ -1149,16 +1260,16 @@
   ],
   "siteSettings": {
     "id": "main",
-    "brandNameAr": "متجر Google AI Pro مصر",
+    "brandNameAr": "متجر الذكاء الاصطناعي برو الرسمي",
     "brandNameEn": "Google AI Pro Egypt Store",
     "logoUrl": "/logo.png",
     "contactEmail": "support@googleaipro.eg",
     "supportPhone": "+20 100 000 0001",
     "whatsappNumber": "+20 100 000 0001",
-    "announcementAr": "⚡ سرعة المعالجة المقدرة 5 دقائق بعد تأكيد الدفع عبر فودافون كاش وإنستاباي!",
+    "announcementAr": "عرض اليوم: استلم دعوتك خلال 5 دقائق فقط!",
     "announcementEn": "⚡ Target processing time: 5 minutes after payment verification via Mobile Cash & InstaPay!",
     "isAnnouncementActive": true,
     "maintenanceMode": false,
-    "updatedAt": "2026-10-16T12:00:00.000Z"
+    "updatedAt": "2026-10-16T15:17:56.643Z"
   }
 }

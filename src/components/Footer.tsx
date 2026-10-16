@@ -1,12 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Sparkles, Mail, Phone, MessageSquare, ShieldAlert } from 'lucide-react';
 
 export default function Footer() {
   const { language, t } = useLanguage();
+
+  const [settings, setSettings] = useState<{
+    brandNameAr?: string;
+    brandNameEn?: string;
+    contactEmail?: string;
+    supportPhone?: string;
+    whatsappNumber?: string;
+  }>({
+    brandNameAr: 'متجر Google AI Pro مصر',
+    brandNameEn: 'Google AI Pro Egypt Store',
+    contactEmail: 'support@googleaipro.eg',
+    supportPhone: '+20 100 000 0001',
+    whatsappNumber: '+20 100 000 0001',
+  });
+  const [paymentMethods, setPaymentMethods] = useState<{ id: string; nameAr: string; nameEn: string }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/public/config', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) {
+          setSettings(data.settings);
+        }
+        if (data.paymentMethods && Array.isArray(data.paymentMethods)) {
+          setPaymentMethods(data.paymentMethods);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <footer className="relative bg-[#05070e] border-t border-white/10 pt-16 pb-12 overflow-hidden text-slate-400 text-xs sm:text-sm">
@@ -22,7 +51,9 @@ export default function Footer() {
                   <Sparkles className="w-4 h-4 text-indigo-400" />
                 </div>
               </div>
-              <span className="font-bold text-lg text-white">Google AI Pro Store</span>
+              <span className="font-bold text-lg text-white">
+                {language === 'ar' ? (settings.brandNameAr || 'Google AI Pro Store') : (settings.brandNameEn || 'Google AI Pro Store')}
+              </span>
             </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
@@ -34,11 +65,11 @@ export default function Footer() {
             <div className="pt-2 text-xs space-y-1.5 text-slate-300">
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-indigo-400" />
-                <span>support@googleaipro.eg</span>
+                <span>{settings.contactEmail || 'support@googleaipro.eg'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-indigo-400" />
-                <span>+20 100 000 0001 (WhatsApp & Calls)</span>
+                <span>{settings.supportPhone || settings.whatsappNumber || '+20 100 000 0001'} (WhatsApp & Calls)</span>
               </div>
             </div>
           </div>
@@ -112,22 +143,36 @@ export default function Footer() {
               {language === 'ar' ? 'وسائل الدفع في مصر' : 'Payment Methods'}
             </h4>
             <div className="space-y-1.5 text-xs text-slate-400">
-              <p className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                فودافون كاش (Vodafone Cash)
-              </p>
-              <p className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                إنستاباي مصر (InstaPay)
-              </p>
-              <p className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                اتصالات كاش (Etisalat Cash)
-              </p>
-              <p className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                تحويل بنكي محلي (Bank Transfer)
-              </p>
+              {paymentMethods && paymentMethods.length > 0 ? (
+                paymentMethods.map((m, idx) => {
+                  const colors = ['bg-emerald-400', 'bg-blue-400', 'bg-amber-400', 'bg-purple-400', 'bg-cyan-400'];
+                  return (
+                    <p key={m.id} className="flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${colors[idx % colors.length]}`} />
+                      {language === 'ar' ? m.nameAr : (m.nameEn || m.nameAr)}
+                    </p>
+                  );
+                })
+              ) : (
+                <>
+                  <p className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    فودافون كاش (Vodafone Cash)
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    إنستاباي مصر (InstaPay)
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    اتصالات كاش (Etisalat Cash)
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    تحويل بنكي محلي (Bank Transfer)
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

@@ -23,6 +23,8 @@ export interface FeatureCardConfig {
   order: number;
 }
 
+export type FeatureCard = FeatureCardConfig;
+
 export interface ProductConfig {
   id: string;
   titleAr: string;
