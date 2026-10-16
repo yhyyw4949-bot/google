@@ -1,0 +1,828 @@
+{
+  "profiles": [
+    {
+      "id": "admin-001",
+      "email": "admin@googleaipro.eg",
+      "fullName": "مدير النظام الرئيسي",
+      "phone": "+20 100 000 0001",
+      "role": "admin",
+      "isSuspended": false,
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "user-001",
+      "email": "ahmed@example.com",
+      "fullName": "أحمد محمود",
+      "phone": "+20 102 345 6789",
+      "role": "customer",
+      "isSuspended": false,
+      "createdAt": "2026-10-10T12:00:00.000Z",
+      "updatedAt": "2026-10-10T12:00:00.000Z"
+    },
+    {
+      "id": "usr-d7fd1a98-454b-4989-a5fb-c883f6d10a2b",
+      "email": "testuser_1792156178816@example.com",
+      "fullName": "أحمد حسام",
+      "phone": "01099887766",
+      "role": "customer",
+      "isSuspended": false,
+      "createdAt": "2026-10-16T13:09:38.839Z",
+      "updatedAt": "2026-10-16T13:09:38.839Z"
+    },
+    {
+      "id": "usr-4545f381-1a64-4233-81ab-15066267a496",
+      "email": "testuser_1792156708966@example.com",
+      "fullName": "أحمد حسام",
+      "phone": "01099887766",
+      "role": "customer",
+      "isSuspended": false,
+      "createdAt": "2026-10-16T13:18:28.990Z",
+      "updatedAt": "2026-10-16T13:18:28.990Z"
+    }
+  ],
+  "passwords": {
+    "admin-001": "04927142e0704c9d8c95bac993ca4c6adbe565de0a2e2590420e56d9285ad67d",
+    "user-001": "5a5a735324dffe3f102f5c5d3d5fe8c9790483b45f68cf32532acbd006ffce3f",
+    "usr-d7fd1a98-454b-4989-a5fb-c883f6d10a2b": "7b7eb2d34618a923119e927238f9609cbc29b5a054f40b5a70bba3069be79f03",
+    "usr-4545f381-1a64-4233-81ab-15066267a496": "7b7eb2d34618a923119e927238f9609cbc29b5a054f40b5a70bba3069be79f03"
+  },
+  "products": [
+    {
+      "id": "google-ai-pro-invite",
+      "titleAr": "Google AI Pro",
+      "titleEn": "Google AI Pro",
+      "descAr": "دعوة تفعيل رسمية لاشتراك Google AI Pro المتقدم على بريدك الشخصي.",
+      "descEn": "Official activation invitation for advanced Google AI Pro subscription on your personal email.",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "isAvailable": true,
+      "durationAr": "دعوة تفعيل للاشتراك المتاح وفق شروط Google",
+      "durationEn": "Activation invitation for available subscription under Google terms",
+      "deliveryTargetMins": 5,
+      "disclaimerAr": "تنبيه: هذه خدمة وساطة مستقلة. تختلف المزايا وحدود الاستخدام الدقيقة وفق شروط خطط Google الحالية، وأهلية الحساب الجغرافي. لا تتضمن حسابات YouTube Premium مالم يذكر ذلك صراحة.",
+      "disclaimerEn": "Notice: This is an independent intermediary service. Exact benefits and usage limits depend on current Google plan terms and account eligibility. Does not include YouTube Premium unless explicitly verified.",
+      "featureCards": [
+        {
+          "id": "card-1",
+          "titleAr": "Gemini AI",
+          "titleEn": "Gemini AI",
+          "descAr": "مساعد ذكي يساعدك على الكتابة والتلخيص وشرح الأفكار وحل المشكلات والمساعدة في البرمجة.",
+          "descEn": "Intelligent assistant helping you write, summarize, clarify concepts, solve problems, and assist in programming.",
+          "iconName": "Sparkles",
+          "officialUrl": "https://gemini.google.com",
+          "isEnabled": true,
+          "order": 1
+        },
+        {
+          "id": "card-2",
+          "titleAr": "Deep Research",
+          "titleEn": "Deep Research",
+          "descAr": "استكشف الموضوعات المعقدة وساعد في جمع المعلومات وتنظيمها وإعداد تقارير بحثية مفصلة.",
+          "descEn": "Explore complex topics, gather and synthesize information, and assemble comprehensive research reports.",
+          "iconName": "Search",
+          "officialUrl": "https://blog.google/technology/ai/",
+          "isEnabled": true,
+          "order": 2
+        },
+        {
+          "id": "card-3",
+          "titleAr": "NotebookLM",
+          "titleEn": "NotebookLM",
+          "descAr": "حلّل مصادر الدراسة والمستندات، وأنشئ ملخصات ومراجعات تساعدك على فهم المحتوى.",
+          "descEn": "Analyze study sources and documents, generate summaries, study guides, and review materials to master content.",
+          "iconName": "BookOpen",
+          "officialUrl": "https://notebooklm.google",
+          "isEnabled": true,
+          "order": 3
+        },
+        {
+          "id": "card-4",
+          "titleAr": "إنشاء الصور والفيديو بالذكاء الاصطناعي",
+          "titleEn": "AI Image & Video Creation",
+          "descAr": "استكشف أدوات إنشاء المحتوى المرئي والصور والفيديو باستخدام الذكاء الاصطناعي، حسب المزايا المتاحة في خطتك.",
+          "descEn": "Explore creative AI tools for visual content, images, and video creation, based on features available in your plan.",
+          "iconName": "Image",
+          "officialUrl": "https://deepmind.google/technologies/imagen-3/",
+          "isEnabled": true,
+          "order": 4
+        },
+        {
+          "id": "card-5",
+          "titleAr": "Gemini في تطبيقات Google",
+          "titleEn": "Gemini in Google Apps",
+          "descAr": "استفد من مساعدات الذكاء الاصطناعي في تطبيقات Google المدعومة مثل Gmail وGoogle Docs، وفق التوافر.",
+          "descEn": "Take advantage of AI assistance across supported Google Workspace apps like Gmail and Google Docs, subject to availability.",
+          "iconName": "LayoutGrid",
+          "officialUrl": "https://workspace.google.com",
+          "isEnabled": true,
+          "order": 5
+        },
+        {
+          "id": "card-6",
+          "titleAr": "مساحة تخزين Google One",
+          "titleEn": "Google One Storage",
+          "descAr": "استفد من مساحة التخزين المرتبطة بخطتك، إذا كانت مشمولة في الاشتراك الفعلي الذي ستحصل عليه.",
+          "descEn": "Benefit from cloud storage linked with your plan, if included in the actual subscription package provided.",
+          "iconName": "Cloud",
+          "officialUrl": "https://one.google.com",
+          "isEnabled": true,
+          "order": 6
+        }
+      ],
+      "updatedAt": "2026-10-16T12:00:00.000Z",
+      "maxQuota": 5
+    }
+  ],
+  "paymentMethods": [
+    {
+      "id": "method-voda",
+      "code": "vodafone_cash",
+      "nameAr": "فودافون كاش (Vodafone Cash)",
+      "nameEn": "Vodafone Cash",
+      "recipientName": "محفظة المتجر الرسمية",
+      "accountIdentifier": "01012345678",
+      "instructionsAr": "قم بالتحويل عبر تطبيق أنا فودافون أو كود *9*7*الرقم*المبلغ# واحتفظ بلقطة الشاشة (سكرين شوت) للتحويل.",
+      "instructionsEn": "Transfer via Ana Vodafone App or dial *9*7*Number*Amount# and keep a screenshot of the confirmation.",
+      "isEnabled": true,
+      "sortOrder": 1,
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "method-insta",
+      "code": "instapay",
+      "nameAr": "إنستاباي (InstaPay)",
+      "nameEn": "InstaPay Egypt",
+      "recipientName": "حساب إنستاباي المعتمد",
+      "accountIdentifier": "googleaipro@instapay",
+      "instructionsAr": "حول إلى معرف الدفع اللحظي (IPA): googleaipro@instapay واكتب رقم الطلب في خانة الملاحظات إن أمكن.",
+      "instructionsEn": "Transfer to the Instant Payment Address (IPA): googleaipro@instapay and note your Order ID if possible.",
+      "isEnabled": true,
+      "sortOrder": 2,
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "method-etisalat",
+      "code": "etisalat_cash",
+      "nameAr": "اتصالات كاش (Etisalat Cash)",
+      "nameEn": "Etisalat Cash",
+      "recipientName": "محفظة المتجر",
+      "accountIdentifier": "01112345678",
+      "instructionsAr": "حول المبلغ إلى رقم المحفظة المعروض وارفع صورة إشعار نجاح العملية.",
+      "instructionsEn": "Transfer amount to the wallet number and upload the transaction success receipt.",
+      "isEnabled": true,
+      "sortOrder": 3,
+      "createdAt": "2026-10-01T10:00:00.000Z",
+      "updatedAt": "2026-10-01T10:00:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "GAP-20261016-1001",
+      "customerId": "user-001",
+      "customerName": "أحمد محمود",
+      "customerEmail": "ahmed@example.com",
+      "customerPhone": "+20 102 345 6789",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodId": "method-voda",
+      "paymentMethodName": "فودافون كاش (Vodafone Cash)",
+      "paymentStatus": "approved",
+      "fulfillmentStatus": "completed",
+      "invitationSentAt": "2026-10-16T11:05:00.000Z",
+      "completedAt": "2026-10-16T11:08:00.000Z",
+      "actualDispatchNotes": "تم إرسال الدعوة الرسمية بنجاح عبر نظام إدارة الدعوات المعتمد.",
+      "createdAt": "2026-10-16T11:00:00.000Z",
+      "updatedAt": "2026-10-16T11:08:00.000Z"
+    },
+    {
+      "id": "GAP-20261016-1002",
+      "customerName": "سارة خالد",
+      "customerEmail": "sara.khalid@gmail.com",
+      "customerPhone": "+20 111 222 3344",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodId": "method-insta",
+      "paymentMethodName": "إنستاباي (InstaPay)",
+      "paymentStatus": "receipt_submitted",
+      "fulfillmentStatus": "pending",
+      "createdAt": "2026-10-16T14:40:00.000Z",
+      "updatedAt": "2026-10-16T14:42:00.000Z"
+    },
+    {
+      "id": "GAP-20261016-1003",
+      "customerName": "محمود عبد الرحمن",
+      "customerEmail": "mahmoud.abdel@gmail.com",
+      "customerPhone": "+20 122 998 7766",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodId": "method-voda",
+      "paymentMethodName": "فودافون كاش (Vodafone Cash)",
+      "paymentStatus": "awaiting_payment",
+      "fulfillmentStatus": "pending",
+      "createdAt": "2026-10-16T15:10:00.000Z",
+      "updatedAt": "2026-10-16T15:10:00.000Z"
+    },
+    {
+      "id": "GAP-20261016-2482",
+      "customerId": "usr-d7fd1a98-454b-4989-a5fb-c883f6d10a2b",
+      "customerName": "أحمد حسام",
+      "customerEmail": "testuser_1792156178816@example.com",
+      "customerPhone": "01099887766",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodName": "",
+      "paymentStatus": "approved",
+      "fulfillmentStatus": "completed",
+      "createdAt": "2026-10-16T13:09:38.862Z",
+      "updatedAt": "2026-10-16T13:09:38.944Z",
+      "invitationSentAt": "2026-10-16T13:09:38.936Z",
+      "actualDispatchNotes": "تم إرسال دعوة التفعيل الرسمية عبر بريد Google.",
+      "completedAt": "2026-10-16T13:09:38.943Z"
+    },
+    {
+      "id": "GAP-20261016-9246",
+      "customerId": "usr-4545f381-1a64-4233-81ab-15066267a496",
+      "customerName": "أحمد حسام",
+      "customerEmail": "testuser_1792156708966@example.com",
+      "customerPhone": "01099887766",
+      "productId": "google-ai-pro-invite",
+      "productName": "Google AI Pro",
+      "priceCents": 2500,
+      "currency": "EGP",
+      "paymentMethodName": "",
+      "paymentStatus": "approved",
+      "fulfillmentStatus": "completed",
+      "createdAt": "2026-10-16T13:18:29.016Z",
+      "updatedAt": "2026-10-16T13:18:29.094Z",
+      "invitationSentAt": "2026-10-16T13:18:29.086Z",
+      "actualDispatchNotes": "تم إرسال دعوة التفعيل الرسمية عبر بريد Google.",
+      "completedAt": "2026-10-16T13:18:29.093Z"
+    }
+  ],
+  "paymentProofs": [
+    {
+      "id": "proof-001",
+      "orderId": "GAP-20261016-1001",
+      "filePath": "/uploads/receipts/sample-receipt-1.png",
+      "originalFilename": "vodafone_transfer.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 245000,
+      "transactionReference": "TXN-984210",
+      "reviewStatus": "approved",
+      "reviewerId": "admin-001",
+      "reviewTimestamp": "2026-10-16T11:04:00.000Z",
+      "createdAt": "2026-10-16T11:02:00.000Z"
+    },
+    {
+      "id": "proof-002",
+      "orderId": "GAP-20261016-1002",
+      "filePath": "/uploads/receipts/sample-receipt-2.png",
+      "originalFilename": "instapay_payment.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 312000,
+      "transactionReference": "IPN-554411",
+      "reviewStatus": "pending",
+      "createdAt": "2026-10-16T14:42:00.000Z"
+    },
+    {
+      "id": "proof-dbc26bd5-e401-409c-9325-c915fb34b3f4",
+      "orderId": "GAP-20261016-2482",
+      "filePath": "ee795635-c9cb-4303-909d-6a78a510d8f9.png",
+      "originalFilename": "vodafone_receipt.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 67,
+      "transactionReference": "TXN-TEST-1234",
+      "reviewStatus": "approved",
+      "createdAt": "2026-10-16T13:09:38.884Z",
+      "reviewerId": "admin-001",
+      "reviewTimestamp": "2026-10-16T13:09:38.926Z"
+    },
+    {
+      "id": "proof-df01a2af-569f-4823-b506-f783611ef2ed",
+      "orderId": "GAP-20261016-9246",
+      "filePath": "9acdca85-cef2-415b-9ea8-a170e2ffc462.png",
+      "originalFilename": "vodafone_receipt.png",
+      "mimeType": "image/png",
+      "fileSizeBytes": 67,
+      "transactionReference": "TXN-TEST-1234",
+      "reviewStatus": "approved",
+      "createdAt": "2026-10-16T13:18:29.039Z",
+      "reviewerId": "admin-001",
+      "reviewTimestamp": "2026-10-16T13:18:29.075Z"
+    }
+  ],
+  "orderStatusHistory": [
+    {
+      "id": "hist-001",
+      "orderId": "GAP-20261016-1001",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "customer",
+      "notes": "تم رفع إثبات الدفع من قبل العميل",
+      "createdAt": "2026-10-16T11:02:00.000Z"
+    },
+    {
+      "id": "hist-002",
+      "orderId": "GAP-20261016-1001",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "processing",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "تم التحقق من استلام المبلغ في فودافون كاش",
+      "createdAt": "2026-10-16T11:04:00.000Z"
+    },
+    {
+      "id": "hist-003",
+      "orderId": "GAP-20261016-1001",
+      "previousPaymentStatus": "approved",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "processing",
+      "newFulfillmentStatus": "invitation_sent",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "تم إرسال دعوة التفعيل الرسمية إلى بريد العميل",
+      "createdAt": "2026-10-16T11:05:00.000Z"
+    },
+    {
+      "id": "hist-60d802fe-1d3b-4757-a4e2-eeb93469ad43",
+      "orderId": "GAP-20261016-2482",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "awaiting_payment",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "customer",
+      "notes": "تم إنشاء الطلب بنجاح",
+      "createdAt": "2026-10-16T13:09:38.862Z"
+    },
+    {
+      "id": "hist-a452ef5c-0caa-4c0f-a109-483854e5256b",
+      "orderId": "GAP-20261016-2482",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "أحمد حسام",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T13:09:38.884Z"
+    },
+    {
+      "id": "hist-a7da4ec1-53d5-42d4-8001-f555e256b63b",
+      "orderId": "GAP-20261016-2482",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "processing",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "تم التحقق من استلام المبلغ في فودافون كاش",
+      "createdAt": "2026-10-16T13:09:38.926Z"
+    },
+    {
+      "id": "hist-4e541932-3a40-4745-82b9-028fc5a98277",
+      "orderId": "GAP-20261016-2482",
+      "previousPaymentStatus": "approved",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "processing",
+      "newFulfillmentStatus": "invitation_sent",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "Action: invitation_sent",
+      "createdAt": "2026-10-16T13:09:38.936Z"
+    },
+    {
+      "id": "hist-51527dd1-d328-459c-91b6-bdf286f5de00",
+      "orderId": "GAP-20261016-2482",
+      "previousPaymentStatus": "approved",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "invitation_sent",
+      "newFulfillmentStatus": "completed",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "Action: complete_order",
+      "createdAt": "2026-10-16T13:09:38.943Z"
+    },
+    {
+      "id": "hist-115c3c91-07ff-4799-a2ac-312db56eaef6",
+      "orderId": "GAP-20261016-9246",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "awaiting_payment",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "customer",
+      "notes": "تم إنشاء الطلب بنجاح",
+      "createdAt": "2026-10-16T13:18:29.016Z"
+    },
+    {
+      "id": "hist-adf68916-602e-4747-b309-459e18053fe2",
+      "orderId": "GAP-20261016-9246",
+      "previousPaymentStatus": "awaiting_payment",
+      "newPaymentStatus": "receipt_submitted",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "pending",
+      "changedBy": "أحمد حسام",
+      "notes": "تم رفع إثبات الدفع للمراجعة",
+      "createdAt": "2026-10-16T13:18:29.039Z"
+    },
+    {
+      "id": "hist-c8f425ae-b69d-46f9-88dc-90a2780d2e07",
+      "orderId": "GAP-20261016-9246",
+      "previousPaymentStatus": "receipt_submitted",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "pending",
+      "newFulfillmentStatus": "processing",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "تم التحقق من استلام المبلغ في فودافون كاش",
+      "createdAt": "2026-10-16T13:18:29.075Z"
+    },
+    {
+      "id": "hist-a58b0470-bec2-40fe-b090-25972b15ac92",
+      "orderId": "GAP-20261016-9246",
+      "previousPaymentStatus": "approved",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "processing",
+      "newFulfillmentStatus": "invitation_sent",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "Action: invitation_sent",
+      "createdAt": "2026-10-16T13:18:29.086Z"
+    },
+    {
+      "id": "hist-09a16ffb-c311-47d6-9092-724248a11f60",
+      "orderId": "GAP-20261016-9246",
+      "previousPaymentStatus": "approved",
+      "newPaymentStatus": "approved",
+      "previousFulfillmentStatus": "invitation_sent",
+      "newFulfillmentStatus": "completed",
+      "changedBy": "مدير النظام الرئيسي",
+      "notes": "Action: complete_order",
+      "createdAt": "2026-10-16T13:18:29.093Z"
+    }
+  ],
+  "adminNotes": [
+    {
+      "id": "note-001",
+      "orderId": "GAP-20261016-1001",
+      "adminId": "admin-001",
+      "adminName": "مدير النظام الرئيسي",
+      "note": "تم إتمام الطلب بنجاح في أقل من 5 دقائق.",
+      "isInternalOnly": true,
+      "createdAt": "2026-10-16T11:08:00.000Z"
+    },
+    {
+      "id": "note-751c9d99-7a67-4500-8925-7c67893b6f83",
+      "orderId": "GAP-20261016-2482",
+      "adminId": "admin-001",
+      "adminName": "مدير النظام الرئيسي",
+      "note": "تم التحقق من استلام المبلغ في فودافون كاش",
+      "isInternalOnly": true,
+      "createdAt": "2026-10-16T13:09:38.926Z"
+    },
+    {
+      "id": "note-886a421f-7b2b-48c8-b58f-63ef4f6807b8",
+      "orderId": "GAP-20261016-9246",
+      "adminId": "admin-001",
+      "adminName": "مدير النظام الرئيسي",
+      "note": "تم التحقق من استلام المبلغ في فودافون كاش",
+      "isInternalOnly": true,
+      "createdAt": "2026-10-16T13:18:29.075Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit-5fa6c9d1-5b71-44ca-a111-4b40e9b9a2f2",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_COMPLETE_ORDER",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-9246",
+      "details": {
+        "prevPaymentStatus": "approved",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "invitation_sent",
+        "newFulfillmentStatus": "completed"
+      },
+      "createdAt": "2026-10-16T13:18:29.093Z"
+    },
+    {
+      "id": "audit-8d3ccd84-81c6-4711-a172-d3e9854ee16a",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_INVITATION_SENT",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-9246",
+      "details": {
+        "prevPaymentStatus": "approved",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "processing",
+        "newFulfillmentStatus": "invitation_sent",
+        "dispatchNotes": "تم إرسال دعوة التفعيل الرسمية عبر بريد Google."
+      },
+      "createdAt": "2026-10-16T13:18:29.086Z"
+    },
+    {
+      "id": "audit-f4ff68a1-8a84-4f99-b6de-e1d9e3bf3473",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_APPROVE_PAYMENT",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-9246",
+      "details": {
+        "prevPaymentStatus": "receipt_submitted",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "pending",
+        "newFulfillmentStatus": "processing"
+      },
+      "createdAt": "2026-10-16T13:18:29.075Z"
+    },
+    {
+      "id": "audit-02953e0e-6b25-46dc-a029-04b8874acdb9",
+      "userEmail": "testuser_1792156708966@example.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-df01a2af-569f-4823-b506-f783611ef2ed",
+      "details": {
+        "orderId": "GAP-20261016-9246",
+        "fileSize": 67,
+        "mimeType": "image/png",
+        "txRef": "TXN-TEST-1234"
+      },
+      "createdAt": "2026-10-16T13:18:29.039Z"
+    },
+    {
+      "id": "audit-9dcce882-361b-4bb2-b3fb-514eb965a3fe",
+      "userEmail": "testuser_1792156708966@example.com",
+      "action": "CREATE_ORDER",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-9246",
+      "details": {
+        "priceCents": 2500,
+        "currency": "EGP"
+      },
+      "createdAt": "2026-10-16T13:18:29.016Z"
+    },
+    {
+      "id": "audit-0110be7e-99a5-4311-a279-f91370816083",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_COMPLETE_ORDER",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-2482",
+      "details": {
+        "prevPaymentStatus": "approved",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "invitation_sent",
+        "newFulfillmentStatus": "completed"
+      },
+      "createdAt": "2026-10-16T13:09:38.943Z"
+    },
+    {
+      "id": "audit-cc5b771f-383c-4c44-916e-70028cd14a3e",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_INVITATION_SENT",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-2482",
+      "details": {
+        "prevPaymentStatus": "approved",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "processing",
+        "newFulfillmentStatus": "invitation_sent",
+        "dispatchNotes": "تم إرسال دعوة التفعيل الرسمية عبر بريد Google."
+      },
+      "createdAt": "2026-10-16T13:09:38.936Z"
+    },
+    {
+      "id": "audit-7a83ed7c-d96a-414b-8b5a-b42c8b2c6350",
+      "userId": "admin-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "ORDER_APPROVE_PAYMENT",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-2482",
+      "details": {
+        "prevPaymentStatus": "receipt_submitted",
+        "newPaymentStatus": "approved",
+        "prevFulfillmentStatus": "pending",
+        "newFulfillmentStatus": "processing"
+      },
+      "createdAt": "2026-10-16T13:09:38.926Z"
+    },
+    {
+      "id": "audit-a5bcdd0a-95c7-4cf6-87ec-6df18da6dc19",
+      "userEmail": "testuser_1792156178816@example.com",
+      "action": "UPLOAD_RECEIPT",
+      "resourceType": "payment_proofs",
+      "resourceId": "proof-dbc26bd5-e401-409c-9325-c915fb34b3f4",
+      "details": {
+        "orderId": "GAP-20261016-2482",
+        "fileSize": 67,
+        "mimeType": "image/png",
+        "txRef": "TXN-TEST-1234"
+      },
+      "createdAt": "2026-10-16T13:09:38.884Z"
+    },
+    {
+      "id": "audit-dfa8cd66-1c3a-44ca-ac38-ac3902904d2d",
+      "userEmail": "testuser_1792156178816@example.com",
+      "action": "CREATE_ORDER",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-2482",
+      "details": {
+        "priceCents": 2500,
+        "currency": "EGP"
+      },
+      "createdAt": "2026-10-16T13:09:38.862Z"
+    },
+    {
+      "id": "audit-001",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "APPROVE_PAYMENT",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-1001",
+      "details": {
+        "amount": 2500,
+        "currency": "EGP"
+      },
+      "createdAt": "2026-10-16T11:04:00.000Z"
+    },
+    {
+      "id": "audit-002",
+      "userEmail": "admin@googleaipro.eg",
+      "action": "DISPATCH_INVITATION",
+      "resourceType": "orders",
+      "resourceId": "GAP-20261016-1001",
+      "details": {
+        "channel": "official_invite_link"
+      },
+      "createdAt": "2026-10-16T11:05:00.000Z"
+    }
+  ],
+  "emailNotifications": [
+    {
+      "id": "email-b4c381d2-694b-432d-bc15-ec1dc2bfd189",
+      "orderId": "GAP-20261016-9246",
+      "recipientEmail": "testuser_1792156708966@example.com",
+      "templateType": "order_completed",
+      "language": "ar",
+      "subject": "تم إكمال طلبك بنجاح (GAP-20261016-9246) - نتمنى لك تجربة ممتعة",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #22c55e;\">اكتمل طلبك بنجاح!</h2>\n          <p>عزيزي أحمد حسام، تم إتمام طلبك رقم <strong>GAP-20261016-9246</strong> بنجاح تام.</p>\n          <p>نتمنى لك تجربة مثمرة مع أدوات Google AI Pro المتقدمة في الدراسة والعمل والإبداع.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:18:29.093Z",
+      "createdAt": "2026-10-16T13:18:29.093Z"
+    },
+    {
+      "id": "email-4339f999-b75d-4336-a296-40878b574d34",
+      "orderId": "GAP-20261016-9246",
+      "recipientEmail": "testuser_1792156708966@example.com",
+      "templateType": "invitation_sent",
+      "language": "ar",
+      "subject": "تم إرسال دعوة Google AI Pro الخاصة بك! (GAP-20261016-9246)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #8b5cf6;\">تهانينا! تم إرسال دعوتك الرسمية</h2>\n          <p>عزيزي أحمد حسام، يسعدنا إبلاغك بأنه تم إرسال دعوة تفعيل اشتراك <strong>Google AI Pro</strong> إلى بريدك الإلكتروني.</p>\n          <p style=\"background: #1e293b; padding: 10px; border-radius: 6px;\"><strong>ملاحظات التفعيل:</strong> تم إرسال دعوة التفعيل الرسمية عبر بريد Google.</p>\n          <p>يرجى تفقد صندوق الوارد، وكذلك مجلد الرسائل الترويجية (Promotions) أو غير المرغوب فيها (Spam) للقبول والتفعيل.</p>\n          <p style=\"color: #94a3b8; font-size: 13px;\">تنبيه: إرسال هذا الإشعار لا يعوض التحقق الفعلي من استلام الدعوة في صندوق بريد Google الخاص بك.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:18:29.086Z",
+      "createdAt": "2026-10-16T13:18:29.086Z"
+    },
+    {
+      "id": "email-b24ef76b-74de-48e9-9412-b1d3fd5f057a",
+      "orderId": "GAP-20261016-9246",
+      "recipientEmail": "testuser_1792156708966@example.com",
+      "templateType": "payment_approved",
+      "language": "ar",
+      "subject": "تم تأكيد دفع طلبك بنجاح (GAP-20261016-9246) - جاري تجهيز الدعوة",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #22c55e;\">تم تأكيد استلام دفعتك بنجاح!</h2>\n          <p>عزيزي أحمد حسام، تم التحقق من صحة التحويل لطلبك <strong>GAP-20261016-9246</strong> بنجاح.</p>\n          <p>بدأ فريق العمل في معالجة وإعداد دعوة تفعيل Google AI Pro الخاصة بك. نهدف إلى إرسالها خلال 5 دقائق رهن توافر الخدمة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:18:29.076Z",
+      "createdAt": "2026-10-16T13:18:29.076Z"
+    },
+    {
+      "id": "email-2fb42891-ce37-4356-b419-c24ad8763e8d",
+      "orderId": "GAP-20261016-9246",
+      "recipientEmail": "testuser_1792156708966@example.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-9246)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً أحمد حسام،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-9246</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:18:29.042Z",
+      "createdAt": "2026-10-16T13:18:29.042Z"
+    },
+    {
+      "id": "email-f62c5007-e7bd-4bf2-ab75-13328771f99b",
+      "orderId": "GAP-20261016-9246",
+      "recipientEmail": "testuser_1792156708966@example.com",
+      "templateType": "order_created",
+      "language": "ar",
+      "subject": "تم إنشاء طلبك بنجاح (GAP-20261016-9246) - متجر Google AI Pro مصر",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً أحمد حسام،</h2>\n          <p>شكراً لطلبك اشتراك <strong>Google AI Pro</strong>.</p>\n          <div style=\"background: #1e293b; padding: 16px; border-radius: 8px; margin: 20px 0; border: 1px solid #334155;\">\n            <p style=\"margin: 4px 0;\"><strong>رقم الطلب:</strong> <span style=\"color: #38bdf8;\">GAP-20261016-9246</span></p>\n            <p style=\"margin: 4px 0;\"><strong>المبلغ المستحق:</strong> 25.00 EGP</p>\n          </div>\n          <p><strong>الخطوة التالية:</strong> يرجى تحويل المبلغ المطلوب إلى إحدى وسائل الدفع المتاحة ثم رفع إثبات التحويل (سكرين شوت أو إيصال) من خلال صفحة تتبع الطلب.</p>\n          <p style=\"color: #94a3b8; font-size: 13px;\">هدف المعالجة التقديري هو 5 دقائق بعد التحقق من الدفع، رهن التوافر.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:18:29.018Z",
+      "createdAt": "2026-10-16T13:18:29.018Z"
+    },
+    {
+      "id": "email-23414f0a-fa39-4109-af96-aae0a17153eb",
+      "orderId": "GAP-20261016-2482",
+      "recipientEmail": "testuser_1792156178816@example.com",
+      "templateType": "order_completed",
+      "language": "ar",
+      "subject": "تم إكمال طلبك بنجاح (GAP-20261016-2482) - نتمنى لك تجربة ممتعة",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #22c55e;\">اكتمل طلبك بنجاح!</h2>\n          <p>عزيزي أحمد حسام، تم إتمام طلبك رقم <strong>GAP-20261016-2482</strong> بنجاح تام.</p>\n          <p>نتمنى لك تجربة مثمرة مع أدوات Google AI Pro المتقدمة في الدراسة والعمل والإبداع.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:09:38.943Z",
+      "createdAt": "2026-10-16T13:09:38.943Z"
+    },
+    {
+      "id": "email-2b24af3a-a34c-4831-ae57-4573f4fe93c4",
+      "orderId": "GAP-20261016-2482",
+      "recipientEmail": "testuser_1792156178816@example.com",
+      "templateType": "invitation_sent",
+      "language": "ar",
+      "subject": "تم إرسال دعوة Google AI Pro الخاصة بك! (GAP-20261016-2482)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #8b5cf6;\">تهانينا! تم إرسال دعوتك الرسمية</h2>\n          <p>عزيزي أحمد حسام، يسعدنا إبلاغك بأنه تم إرسال دعوة تفعيل اشتراك <strong>Google AI Pro</strong> إلى بريدك الإلكتروني.</p>\n          <p style=\"background: #1e293b; padding: 10px; border-radius: 6px;\"><strong>ملاحظات التفعيل:</strong> تم إرسال دعوة التفعيل الرسمية عبر بريد Google.</p>\n          <p>يرجى تفقد صندوق الوارد، وكذلك مجلد الرسائل الترويجية (Promotions) أو غير المرغوب فيها (Spam) للقبول والتفعيل.</p>\n          <p style=\"color: #94a3b8; font-size: 13px;\">تنبيه: إرسال هذا الإشعار لا يعوض التحقق الفعلي من استلام الدعوة في صندوق بريد Google الخاص بك.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:09:38.936Z",
+      "createdAt": "2026-10-16T13:09:38.936Z"
+    },
+    {
+      "id": "email-764e8ea4-672e-4d5b-a769-342c416c4611",
+      "orderId": "GAP-20261016-2482",
+      "recipientEmail": "testuser_1792156178816@example.com",
+      "templateType": "payment_approved",
+      "language": "ar",
+      "subject": "تم تأكيد دفع طلبك بنجاح (GAP-20261016-2482) - جاري تجهيز الدعوة",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #22c55e;\">تم تأكيد استلام دفعتك بنجاح!</h2>\n          <p>عزيزي أحمد حسام، تم التحقق من صحة التحويل لطلبك <strong>GAP-20261016-2482</strong> بنجاح.</p>\n          <p>بدأ فريق العمل في معالجة وإعداد دعوة تفعيل Google AI Pro الخاصة بك. نهدف إلى إرسالها خلال 5 دقائق رهن توافر الخدمة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:09:38.928Z",
+      "createdAt": "2026-10-16T13:09:38.928Z"
+    },
+    {
+      "id": "email-c2438c3d-cf35-43f3-b676-41f8a9648f36",
+      "orderId": "GAP-20261016-2482",
+      "recipientEmail": "testuser_1792156178816@example.com",
+      "templateType": "receipt_uploaded",
+      "language": "ar",
+      "subject": "تم استلام إثبات الدفع لطلبك (GAP-20261016-2482)",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً أحمد حسام،</h2>\n          <p>لقد استلمنا إثبات الدفع لطلبك رقم <strong>GAP-20261016-2482</strong>.</p>\n          <p>يقوم فريق العمل الآن بمراجعة الإيصال ومطابقته مع الحساب. سنقوم بإشعارك فور اكتمال المراجعة.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:09:38.887Z",
+      "createdAt": "2026-10-16T13:09:38.887Z"
+    },
+    {
+      "id": "email-f41454e5-7f7c-4133-8605-3001828b8201",
+      "orderId": "GAP-20261016-2482",
+      "recipientEmail": "testuser_1792156178816@example.com",
+      "templateType": "order_created",
+      "language": "ar",
+      "subject": "تم إنشاء طلبك بنجاح (GAP-20261016-2482) - متجر Google AI Pro مصر",
+      "bodyHtml": "\n    <!DOCTYPE html>\n    <html lang=\"ar\" dir=\"rtl\">\n    <head>\n      <meta charset=\"utf-8\">\n      <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #070913; color: #f8fafc; margin: 0; padding: 20px; }\n        .container { max-width: 600px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; padding: 32px; }\n        .header { text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 24px; margin-bottom: 24px; }\n        .brand { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n        .footer { margin-top: 32px; border-top: 1px solid #1e293b; padding-top: 20px; font-size: 12px; color: #64748b; text-align: center; }\n      </style>\n    </head>\n    <body dir=\"rtl\">\n      <div class=\"container\">\n        <div class=\"header\">\n          <div class=\"brand\">متجر Google AI Pro مصر</div>\n        </div>\n        <div class=\"content\">\n          \n          <h2 style=\"color: #6366f1;\">مرحباً أحمد حسام،</h2>\n          <p>شكراً لطلبك اشتراك <strong>Google AI Pro</strong>.</p>\n          <div style=\"background: #1e293b; padding: 16px; border-radius: 8px; margin: 20px 0; border: 1px solid #334155;\">\n            <p style=\"margin: 4px 0;\"><strong>رقم الطلب:</strong> <span style=\"color: #38bdf8;\">GAP-20261016-2482</span></p>\n            <p style=\"margin: 4px 0;\"><strong>المبلغ المستحق:</strong> 25.00 EGP</p>\n          </div>\n          <p><strong>الخطوة التالية:</strong> يرجى تحويل المبلغ المطلوب إلى إحدى وسائل الدفع المتاحة ثم رفع إثبات التحويل (سكرين شوت أو إيصال) من خلال صفحة تتبع الطلب.</p>\n          <p style=\"color: #94a3b8; font-size: 13px;\">هدف المعالجة التقديري هو 5 دقائق بعد التحقق من الدفع، رهن التوافر.</p>\n        \n        </div>\n        <div class=\"footer\">\n          <p>متجر Google AI Pro مصر - support@googleaipro.eg | +20 100 000 0001</p>\n          <p style=\"font-size: 11px;\">خدمة مستقلة غير تابعة رسمياً لشركة Google LLC.</p>\n        </div>\n      </div>\n    </body>\n    </html>\n  ",
+      "status": "sent",
+      "sentAt": "2026-10-16T13:09:38.864Z",
+      "createdAt": "2026-10-16T13:09:38.864Z"
+    },
+    {
+      "id": "email-001",
+      "orderId": "GAP-20261016-1001",
+      "recipientEmail": "ahmed@example.com",
+      "templateType": "order_created",
+      "language": "ar",
+      "subject": "تم إنشاء طلبك بنجاح - رقم الطلب GAP-20261016-1001",
+      "bodyHtml": "<p>شكراً لطلبك اشتراك Google AI Pro. يرجى إتمام التحويل ورفع الإيصال.</p>",
+      "status": "sent",
+      "sentAt": "2026-10-16T11:00:30.000Z",
+      "createdAt": "2026-10-16T11:00:00.000Z"
+    },
+    {
+      "id": "email-002",
+      "orderId": "GAP-20261016-1001",
+      "recipientEmail": "ahmed@example.com",
+      "templateType": "invitation_sent",
+      "language": "ar",
+      "subject": "تم إرسال دعوة تفعيل اشتراكك في Google AI Pro!",
+      "bodyHtml": "<p>تم إرسال دعوتك بنجاح إلى بريدك الإلكتروني. تفقد صندوق الوارد أو البريد الترويجي.</p>",
+      "status": "sent",
+      "sentAt": "2026-10-16T11:05:10.000Z",
+      "createdAt": "2026-10-16T11:05:00.000Z"
+    }
+  ],
+  "siteSettings": {
+    "id": "main",
+    "brandNameAr": "متجر Google AI Pro مصر",
+    "brandNameEn": "Google AI Pro Egypt Store",
+    "logoUrl": "/logo.png",
+    "contactEmail": "support@googleaipro.eg",
+    "supportPhone": "+20 100 000 0001",
+    "whatsappNumber": "+20 100 000 0001",
+    "announcementAr": "⚡ سرعة المعالجة المقدرة 5 دقائق بعد تأكيد الدفع عبر فودافون كاش وإنستاباي!",
+    "announcementEn": "⚡ Target processing time: 5 minutes after payment verification via Mobile Cash & InstaPay!",
+    "isAnnouncementActive": true,
+    "maintenanceMode": false,
+    "updatedAt": "2026-10-16T12:00:00.000Z"
+  }
+}
